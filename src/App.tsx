@@ -5,9 +5,10 @@ import { Home } from "./pages/home/Home";
 import { Inscription } from "./pages/inscription/Inscription";
 import { Grades } from "./pages/grades/Grades";
 import { Payments } from "./pages/payments/Payments";
-import { Studies } from "./pages/studies/Studies";
+import { Students } from "./pages/students/Students";
 import { Users } from "./pages/users/Users";
-
+import { MethodPayment } from "./pages/MethodPayment/MethodPayment";
+import './App.css'
 function App() {
 
   return (
@@ -21,8 +22,8 @@ function App() {
           <Route path='/inscripcion' element={<Inscription />} />
           <Route path='/grados' element={<Grades />} />
           <Route path='/pagos' element={<Payments />} />
-          <Route path='/metodos-de-pago' element={<Payments />} />
-          <Route path='/estudiantes' element={<Studies />} />
+          <Route path='/metodos-de-pago' element={<MethodPayment />} />
+          <Route path='/estudiantes' element={<Students />} />
           <Route path='/usuarios' element={<Users />} />
         </Route>
       </Routes>

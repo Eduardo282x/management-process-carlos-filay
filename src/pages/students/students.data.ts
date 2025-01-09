@@ -1,35 +1,36 @@
 import { z } from "zod";
+import { IStudents } from "../../interfaces/students.interface";
 import { IColumns } from "../../interfaces/table.interface";
-import { IUsers } from "../../interfaces/users.interface";
 import { IDataForm } from "../../interfaces/form.interface";
+import { formatNumberWithDots } from "../../utils/formaters";
 
 //Table
-export const userColumns: IColumns[] = [
+export const studentColumns: IColumns[] = [
     {
         label: 'Nombre',
         column: 'firstName',
-        element: (data: IUsers) => data.firstName,
+        element: (data: IStudents) => data.firstName,
     },
     {
         label: 'Apellido',
         column: 'lastName',
-        element: (data: IUsers) => data.lastName,
+        element: (data: IStudents) => data.lastName,
     },
     {
         label: 'Cédula',
         column: 'identify',
-        element: (data: IUsers) => data.identify,
+        element: (data: IStudents) => formatNumberWithDots(data.identify,'V-',''),
     },
     {
-        label: 'Rol',
-        column: 'rolDescription',
-        element: (data: IUsers) => data.rolDescription,
+        label: 'Edad',
+        column: 'age',
+        element: (data: IStudents) => `${data.age} años`,
     },
     {
         label: 'Estado',
         column: 'status',
         icon: true,
-        element: (data: IUsers) => data.status ? 'success' : 'error',
+        element: (data: IStudents) => data.status ? 'success' : 'error',
         canFilter: false
     },
     {
@@ -41,16 +42,17 @@ export const userColumns: IColumns[] = [
     }
 ];
 
+
 //Form & Dialog
-export interface IUserForm {
+export interface IStudentForm {
     firstName: string;
     lastName: string;
     identify: string;
-    rolId: number;
+    age: string;
     status: boolean;
 }
 
-export const usersDataForm: IDataForm[] = [
+export const studentDataForm: IDataForm[] = [
     {
         label: 'Nombre',
         value: '',
@@ -70,26 +72,25 @@ export const usersDataForm: IDataForm[] = [
         name: 'identify',
     },
     {
-        label: 'Rol',
+        label: 'Edad',
         value: '',
-        type: 'select',
-        options: [],
-        name: 'rolId',
+        type: 'text',
+        name: 'age',
     },
 ];
 
-export const usersDefaultValues : IUserForm = {
+export const studentDefaultValues : IStudentForm = {
     firstName: '',
     lastName: '',
     identify: '',
-    rolId: 0,
+    age: '',
     status: true,
 }
 
-export const usersValidationSchema: object = z.object({
-    identify: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
+export const studentValidationSchema: object = z.object({
     firstName: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
     lastName: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
-    rolId: z.number({ message: 'El campo es requerido' }),
+    identify: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
+    age: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
     status: z.boolean({ message: 'El campo es requerido' }),
 });
