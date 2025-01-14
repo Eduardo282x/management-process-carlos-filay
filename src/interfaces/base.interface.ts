@@ -1,10 +1,10 @@
-export interface IBaseResponse {
+export interface BaseResponse {
     message: string;
     success: boolean;
 }
 
-export interface IAuthResponse extends IBaseResponse {
-    token: string;
+export interface BaseResponseLogin extends BaseResponse {
+    userData: string;
 }
 
 export interface IOptions {
