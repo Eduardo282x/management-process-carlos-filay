@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IAuthResponse, IBaseResponse } from "../interfaces/base.interface";
+import { BaseResponse, BaseResponseLogin } from "../interfaces/base.interface";
 import axiosInstance from "./axiosInstance";
 
 export const getDataApi = (endpoint: string) => {
@@ -28,14 +28,14 @@ export const getParamsDataApi = (endpoint: string, params: any) => {
     })
 }
 
-export const postDataApi = async (endpoint: string, data: any): Promise<IAuthResponse | IBaseResponse> => {
+export const postDataApi = async (endpoint: string, data: any): Promise<BaseResponseLogin | BaseResponse> => {
     return await axiosInstance.post(endpoint, data).then((response) => {
         return response.data;
     }).catch((err) => {
         return err.response.data;
     })
 }
-export const postFilesDataApi = async (endpoint: string, file: File): Promise<IAuthResponse | IBaseResponse> => {
+export const postFilesDataApi = async (endpoint: string, file: File): Promise<BaseResponseLogin | BaseResponse> => {
     const formData = new FormData();
     formData.append("file", file);
 
@@ -47,7 +47,7 @@ export const postFilesDataApi = async (endpoint: string, file: File): Promise<IA
         return err.response.data;
     })
 }
-export const postDataFileApi = async (endpoint: string, data: any): Promise<IAuthResponse | IBaseResponse> => {
+export const postDataFileApi = async (endpoint: string, data: any): Promise<BaseResponseLogin | BaseResponse> => {
     return await axiosInstance.post(endpoint, data, {responseType: 'blob'}).then((response) => {
         return response.data;
     }).catch((err) => {
@@ -55,14 +55,14 @@ export const postDataFileApi = async (endpoint: string, data: any): Promise<IAut
     })
 }
 
-export const putDataApi = async (endpoint: string, id: number, data: any): Promise<IBaseResponse> => {
+export const putDataApi = async (endpoint: string, id: number, data: any): Promise<BaseResponse> => {
     return await axiosInstance.put(`${endpoint}/${id}`, data).then((response) => {
         return response.data;
     }).catch((err) => {
         return err.response.data;
     })
 }
-export const putDataApiNormal = async (endpoint: string, data: any): Promise<IBaseResponse> => {
+export const putDataApiNormal = async (endpoint: string, data: any): Promise<BaseResponse> => {
     return await axiosInstance.put(`${endpoint}`, data).then((response) => {
         return response.data;
     }).catch((err) => {
@@ -70,7 +70,7 @@ export const putDataApiNormal = async (endpoint: string, data: any): Promise<IBa
     })
 }
 
-export const deleteDataApi = async (endpoint: string, data: number): Promise<IAuthResponse | IBaseResponse> => {
+export const deleteDataApi = async (endpoint: string, data: number): Promise<BaseResponse> => {
     return await axiosInstance.delete(`${endpoint}/${data}`).then((response) => {
         return response.data;
     }).catch((err) => {

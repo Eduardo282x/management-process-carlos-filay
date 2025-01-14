@@ -17,14 +17,14 @@ export interface FormValues {
 
 export interface IDataForm {
     label: string;
-    value: string;
+    value: string | number | boolean;
     type: TypesInputs;
     name: string;
     options?: IOptions[];
     separate?: string[];
 }
 
-export type TypesInputs = 'text' | 'number' | 'select' | 'textArea' | 'email';
+export type TypesInputs = 'text' | 'number' | 'select' | 'textArea' | 'email' | 'switch';
 
 export interface IOptions {
     label: string;

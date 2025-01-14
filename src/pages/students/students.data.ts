@@ -91,6 +91,5 @@ export const studentValidationSchema: object = z.object({
     firstName: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
     lastName: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
     identify: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
-    age: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
-    status: z.boolean({ message: 'El campo es requerido' }),
+    age: z.string().refine(text => text !== '', { message: 'El campo es requerido' })
 });

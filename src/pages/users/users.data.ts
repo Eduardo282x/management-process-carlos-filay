@@ -2,6 +2,7 @@ import { z } from "zod";
 import { IColumns } from "../../interfaces/table.interface";
 import { IUsers } from "../../interfaces/users.interface";
 import { IDataForm } from "../../interfaces/form.interface";
+import { getDataApi } from "../../backend/basicAPI";
 
 //Table
 export const userColumns: IColumns[] = [
@@ -71,14 +72,20 @@ export const usersDataForm: IDataForm[] = [
     },
     {
         label: 'Rol',
-        value: '',
+        value: '0',
         type: 'select',
         options: [],
         name: 'rolId',
     },
+    {
+        label: 'Estado',
+        value: false,
+        type: 'switch',
+        name: 'status',
+    },
 ];
 
-export const usersDefaultValues : IUserForm = {
+export const usersDefaultValues: IUserForm = {
     firstName: '',
     lastName: '',
     identify: '',
@@ -87,9 +94,19 @@ export const usersDefaultValues : IUserForm = {
 }
 
 export const usersValidationSchema: object = z.object({
-    identify: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
     firstName: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
     lastName: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
-    rolId: z.number({ message: 'El campo es requerido' }),
+    identify: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
+    rolId: z.coerce.number({ message: 'El campo es requerido' }),
     status: z.boolean({ message: 'El campo es requerido' }),
 });
+
+export const getUsersApiV2 = async (): Promise<IUsers[]> => {
+    return await getDataApi('/users').then((response: IUsers[]) => {
+        response.map((user => {
+            user.rolDescription = user.rol.rol;
+            return user;
+        }))
+        return response;
+    })
+}

@@ -1,21 +1,25 @@
 import { Dialog } from '@mui/material';
-import { CirclePlus } from 'lucide-react';
 import { useEffect, useState } from 'react'
 import { getDataApi } from '../../backend/basicAPI';
 import { FormComponent } from '../../components/FormComponent';
 import TableComponent from '../../components/TableComponent';
-// import { IDataForm } from '../../interfaces/form.interface';
 import { actionsValid } from '../../interfaces/table.interface';
 import { IStudents } from '../../interfaces/students.interface';
 import Filter from '../../components/Filter';
 import { Loader } from '../../components/loaders/Loader';
 import { IStudentForm, studentColumns, studentDataForm, studentDefaultValues, studentValidationSchema } from './students.data';
+import { BaseResponse } from '../../interfaces/base.interface';
+import { BaseApi, BaseApiReturn } from '../../backend/BaseAPI';
+import { SnackbarComponent } from '../../components/SnackbarComponent';
 
 export const Students = () => {
     const [students, setStudents] = useState<IStudents[]>([]);
     const [dataTable, setDataTable] = useState<IStudents[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [action, setAction] = useState<actionsValid>('add');
+    const [snackbar, setSnackbar] = useState<BaseResponse>({} as BaseResponse);
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const [defaultValues, setDefaultValues] = useState<IStudentForm>(studentDefaultValues);
     // const [dataForm, setDataForm] = useState<IDataForm[]>(studentDataForm);
 
@@ -33,22 +37,18 @@ export const Students = () => {
         getStudentsApi();
     }, [])
 
-    const getActionTable = (action: actionsValid, data: IStudentForm) => {
-        if (action === 'edit') {
-            setDefaultValues(data);
-            setOpenDialog(true);
-        }
-
-        if (action === 'close') {
-            setOpenDialog(false);
-        }
+    const getActionTable = async (action: actionsValid, data: IStudentForm) => {
+        const responseBaseApi: BaseApiReturn = await BaseApi(action, data, defaultValues, '/students');
+        setDefaultValues(responseBaseApi.body as IStudentForm);
+        setAction(responseBaseApi.action)
+        if (responseBaseApi.open) { setOpenDialog(true) };
+        if (responseBaseApi.close) { setOpenDialog(false) };
+        if (responseBaseApi.snackbarMessage.message !== '') {
+            setSnackbar(responseBaseApi.snackbarMessage);
+            setOpenSnackbar(true);
+            getStudentsApi();
+        };
     }
-
-    const addNewUser = () => {
-        setDefaultValues(studentDefaultValues);
-        setOpenDialog(true);
-    }
-
 
     return (
         <div className='w-full'>
@@ -56,12 +56,6 @@ export const Students = () => {
 
             <div className="flex items-center justify-between w-full my-5">
                 <Filter tableData={students} setTableData={setDataTable} tableColumns={studentColumns}></Filter>
-
-                <button
-                    onClick={addNewUser}
-                    className='bg-[#2563eb] hover:bg-[#1e40af] transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
-                    <CirclePlus /> Agregar
-                </button>
             </div>
 
             {loading && <Loader></Loader>}
@@ -82,11 +76,14 @@ export const Students = () => {
                     defaultValues={defaultValues}
                     validationSchema={studentValidationSchema}
                     buttonText='Agregar Estudiante'
-                    action='add'
+                    action={action}
                     func={getActionTable}
 
                 />
             </Dialog>
+
+            <SnackbarComponent baseResponse={snackbar} open={openSnackbar} setOpen={setOpenSnackbar}></SnackbarComponent>
+
         </div>
     )
 }

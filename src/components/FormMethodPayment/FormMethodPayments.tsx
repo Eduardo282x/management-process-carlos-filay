@@ -52,8 +52,6 @@ export const FormMethodPayments: FC<IFormMethodPayment> = ({ title, btnText, act
     });
 
     const onSubmit = (form: FormValues) => {
-        console.log(form);
-
         func(action, form)
     }
 

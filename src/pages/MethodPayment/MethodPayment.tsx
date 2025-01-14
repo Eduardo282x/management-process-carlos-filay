@@ -11,6 +11,9 @@ import { IBank, IMethodPayment } from '../../interfaces/payment.interface';
 import { FormMethodPayments } from '../../components/FormMethodPayment/FormMethodPayments';
 import { IDataForm } from '../../interfaces/form.interface';
 import { IFormBodyMethodPayments } from '../../components/FormMethodPayment/formMethodPayment.data';
+import { BaseApi, BaseApiReturn } from '../../backend/BaseAPI';
+import { BaseResponse } from '../../interfaces/base.interface';
+import { SnackbarComponent } from '../../components/SnackbarComponent';
 
 export const MethodPayment = () => {
     const [methodPayment, setMethodPayment] = useState<IMethodPayment[]>([]);
@@ -19,6 +22,9 @@ export const MethodPayment = () => {
     const [defaultValues, setDefaultValues] = useState<IFormBodyMethodPayments>(defauldValuesBase);
     const [loading, setLoading] = useState<boolean>(true);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [action, setAction] = useState<actionsValid>('add');
+    const [snackbar, setSnackbar] = useState<BaseResponse>({} as BaseResponse);
+    const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
     const handleClose = () => setOpenDialog(false);
 
@@ -51,7 +57,18 @@ export const MethodPayment = () => {
         getBankApi();
     }, [])
 
-    const getActionTable = (action: actionsValid, data: IMethodPayment) => {
+    const getActionTable = async (action: actionsValid, data: IMethodPayment) => {
+        const responseBaseApi: BaseApiReturn = await BaseApi(action, data, defaultValues, '/payments/methods');
+            setDefaultValues(responseBaseApi.body as IMethodPayment);
+            setAction(responseBaseApi.action)
+            if (responseBaseApi.open) { setOpenDialog(true) };
+            if (responseBaseApi.close) { setOpenDialog(false) };
+            if (responseBaseApi.snackbarMessage.message !== '') {
+                setSnackbar(responseBaseApi.snackbarMessage);
+                setOpenSnackbar(true);
+                getMethodPaymentApi();
+            };
+
         if (action === 'edit') {
             setDefaultValues(data);
             const updatedDataForm = methodPaymentDataForm.filter((field) => {
@@ -59,14 +76,6 @@ export const MethodPayment = () => {
             });
             setDataForm(updatedDataForm);
             setOpenDialog(true);
-        }
-
-        if (action === 'delete') {
-            console.log(data);
-        }
-
-        if (action === 'close') {
-            setOpenDialog(false);
         }
     }
 
@@ -104,13 +113,16 @@ export const MethodPayment = () => {
             >
                 <FormMethodPayments
                     title={'Agregar método de pago'}
-                    action={'add'}
+                    action={action}
                     func={getActionTable}
                     dataForm={dataForm}
                     btnText={'Agregar'}
                     defaultValues={defaultValues}
                 ></FormMethodPayments>
             </Dialog>
+
+            <SnackbarComponent baseResponse={snackbar} open={openSnackbar} setOpen={setOpenSnackbar}></SnackbarComponent>
+            
         </div>
     )
 }

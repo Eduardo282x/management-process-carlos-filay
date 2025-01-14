@@ -9,7 +9,7 @@ export const Layout = () => {
                 <AdminSidebar></AdminSidebar>
             </div>
 
-            <div className="flex items-start justify-start w-full p-8">
+            <div className="flex items-start justify-start w-full p-8 h-screen overflow-auto">
                 <Outlet />
             </div>
         </div>
