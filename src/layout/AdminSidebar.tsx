@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, PenTool, CreditCard, Users, Wallet, LogOut } from 'lucide-react'
+import { BookOpen, GraduationCap, PenTool, CreditCard, Users, Wallet, LogOut,ListChecks } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../components/Logo'
 
@@ -13,6 +13,11 @@ const navItems: NavItem[] = [
         title: "Inscripción",
         href: "/inscripcion",
         icon: BookOpen,
+    },
+    {
+        title: "Registros",
+        href: "/registros",
+        icon: ListChecks,
     },
     {
         title: "Estudiantes",

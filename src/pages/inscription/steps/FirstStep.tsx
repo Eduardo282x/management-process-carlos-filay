@@ -1,4 +1,4 @@
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
     TextField,
     Select,
@@ -8,125 +8,78 @@ import {
     FormHelperText
 } from "@mui/material";
 import { IGrades } from '../../../interfaces/inscription.interface';
-import { z } from 'zod';
-import { formSchema } from '../inscription.data';
+import { IDataFormSteps } from '../inscription.data';
+import { firstDataForm, IStudentForm, studentSchema } from './firstStep.data';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 
 interface FirstStepProps {
-    control: Control<z.infer<typeof formSchema>>;
-    errors: FieldErrors<z.infer<typeof formSchema>>;
     grades: IGrades[];
+    onSubmit: (data: IStudentForm) => IStudentForm
+    valuesForm: IStudentForm
 }
 
 
-export default function FirstStep({control, errors, grades} : FirstStepProps) {
+export default function FirstStep({ grades, onSubmit, valuesForm }: FirstStepProps) {
+
+    const { control, formState: { errors }, handleSubmit, reset } = useForm<IStudentForm>({
+        defaultValues: valuesForm,
+        resolver: zodResolver(studentSchema)
+    })
+
+    useEffect(() => {
+        reset(valuesForm)
+    },[valuesForm])
+
     return (
-        <div>
+        <form id="step-form-1" onSubmit={handleSubmit(onSubmit)}>
             <p className='text-2xl font-semibold mb-5'>Información del Estudiante</p>
             <div className='flex items-start justify-start w-full flex-wrap gap-5'>
-                <div className='w-60'>
-                    <Controller
-                        name="estudianteNombre"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Nombre"
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.estudianteNombre}
-                                helperText={errors.estudianteNombre?.message}
+
+                {firstDataForm && firstDataForm.map((form: IDataFormSteps, index: number) => (
+                    <div className={form.className} key={index}>
+                        {form.type === 'text' && (
+                            <Controller
+                                name={form.formControl}
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        label={form.label}
+                                        variant="outlined"
+                                        fullWidth
+                                        error={!!errors[form.formControl]}
+                                        helperText={errors[form.formControl]?.message}
+                                    />
+                                )}
                             />
                         )}
-                    />
-                </div>
-                <div className='w-60'>
-                    <Controller
-                        name="estudianteApellido"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Apellido"
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.estudianteApellido}
-                                helperText={errors.estudianteApellido?.message}
-                            />
+
+                        {form.type === 'select' && (
+                            <FormControl fullWidth error={!!errors[form.formControl]}>
+                                <InputLabel id="grado-label">{form.label}</InputLabel>
+                                <Controller
+                                    name={form.formControl}
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select
+                                            {...field}
+                                            labelId="grado-label"
+                                            label={form.label}
+                                            className='w-full'
+                                        >
+                                            {grades && grades.map((grade: IGrades, index: number) => (
+                                                <MenuItem key={index} value={grade.id}>{grade.grade}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    )}
+                                />
+                                <FormHelperText>{errors[form.formControl]?.message}</FormHelperText>
+                            </FormControl>
                         )}
-                    />
-                </div>
-                <div className='w-60'>
-                    <Controller
-                        name="estudianteCedula"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Cédula"
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.estudianteCedula}
-                                helperText={errors.estudianteCedula?.message}
-                            />
-                        )}
-                    />
-                </div>
-                <div className='w-60'>
-                    <Controller
-                        name="estudianteEdad"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Edad"
-                                type="number"
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.estudianteEdad}
-                                helperText={errors.estudianteEdad?.message}
-                            />
-                        )}
-                    />
-                </div>
-                <div className='w-[48.5%]'>
-                    <FormControl fullWidth error={!!errors.estudianteGrado}>
-                        <InputLabel id="grado-label">Grado</InputLabel>
-                        <Controller
-                            name="estudianteGrado"
-                            control={control}
-                            render={({ field }) => (
-                                <Select
-                                    {...field}
-                                    labelId="grado-label"
-                                    label="Grado a inscribir"
-                                    className='w-full'
-                                >
-                                    {grades && grades.map((grade: IGrades, index: number) => (
-                                        <MenuItem key={index} value={grade.id}>{grade.grade}</MenuItem>
-                                    ))}
-                                </Select>
-                            )}
-                        />
-                        <FormHelperText>{errors.estudianteGrado?.message}</FormHelperText>
-                    </FormControl>
-                </div>
-                <div className='w-[48.5%]'>
-                    <Controller
-                        name="estudianteDireccion"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                label="Dirección"
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.estudianteDireccion}
-                                helperText={errors.estudianteDireccion?.message}
-                            />
-                        )}
-                    />
-                </div>
+                    </div>
+                ))}
             </div>
-        </div>
+        </form>
     )
 }

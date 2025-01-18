@@ -1,23 +1,31 @@
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
-    TextField, Grid
+    TextField
 } from "@mui/material";
-import { formSchema } from '../inscription.data';
-import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IParentForm, parentsSchema } from './secondStep.data';
 
-interface SecondStepProps {
-    control: Control<z.infer<typeof formSchema>>;
-    errors: FieldErrors<z.infer<typeof formSchema>>;
+interface SecondtStepProps {
+    label: string;
+    index: number;
+    onSubmit: (data: IParentForm) => IParentForm;
+    valuesForm: IParentForm
 }
 
-export default function SecondStep({control, errors} : SecondStepProps) {
+export default function SecondStep({ onSubmit, label, index, valuesForm }: SecondtStepProps) {
+
+    const { control, formState: { errors }, handleSubmit } = useForm<IParentForm>({
+        defaultValues: valuesForm,
+        resolver: zodResolver(parentsSchema)
+    })
+
     return (
-        <div>
-            <p className='text-2xl font-semibold mb-5'>Información de los Padres</p>
-            <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+        <form id={`step-form-2-${index}`} onSubmit={handleSubmit(onSubmit)}>
+            <p className='text-2xl font-semibold mb-5'>{label}</p>
+            <div className='flex items-start justify-start w-full flex-wrap gap-5'>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="padreNombre"
+                        name="firstName"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -25,15 +33,15 @@ export default function SecondStep({control, errors} : SecondStepProps) {
                                 label="Nombre"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.padreNombre}
-                                helperText={errors.padreNombre?.message}
+                                error={!!errors.firstName}
+                                helperText={errors.firstName?.message}
                             />
                         )}
                     />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                </div>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="padreApellido"
+                        name="lastName"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -41,15 +49,15 @@ export default function SecondStep({control, errors} : SecondStepProps) {
                                 label="Apellido"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.padreApellido}
-                                helperText={errors.padreApellido?.message}
+                                error={!!errors.lastName}
+                                helperText={errors.lastName?.message}
                             />
                         )}
                     />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                </div>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="padreCedula"
+                        name="identify"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -57,15 +65,15 @@ export default function SecondStep({control, errors} : SecondStepProps) {
                                 label="Cédula"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.padreCedula}
-                                helperText={errors.padreCedula?.message}
+                                error={!!errors.identify}
+                                helperText={errors.identify?.message}
                             />
                         )}
                     />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                </div>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="padreEdad"
+                        name="age"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -74,15 +82,15 @@ export default function SecondStep({control, errors} : SecondStepProps) {
                                 type="number"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.padreEdad}
-                                helperText={errors.padreEdad?.message}
+                                error={!!errors.age}
+                                helperText={errors.age?.message}
                             />
                         )}
                     />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                </div>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="padreTelefono"
+                        name="phone"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -90,15 +98,15 @@ export default function SecondStep({control, errors} : SecondStepProps) {
                                 label="Teléfono"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.padreTelefono}
-                                helperText={errors.padreTelefono?.message}
+                                error={!!errors.phone}
+                                helperText={errors.phone?.message}
                             />
                         )}
                     />
-                </Grid>
-                <Grid item xs={12}>
+                </div>
+                <div className='w-full'>
                     <Controller
-                        name="padreDireccion"
+                        name="address"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -106,13 +114,13 @@ export default function SecondStep({control, errors} : SecondStepProps) {
                                 label="Dirección"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.padreDireccion}
-                                helperText={errors.padreDireccion?.message}
+                                error={!!errors.address}
+                                helperText={errors.address?.message}
                             />
                         )}
                     />
-                </Grid>
-            </Grid>
-        </div>
+                </div>
+            </div>
+        </form>
     )
 }

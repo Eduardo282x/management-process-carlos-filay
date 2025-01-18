@@ -13,3 +13,16 @@ export interface IMethodPayment {
 export interface IBank {
     bank: string
 }
+
+export interface IPayments {
+    id:              number;
+    amount:          number;
+    currency:        string;
+    datePay:         Date;
+    namePayer:       string;
+    lastNamePayer:   string;
+    identifyPayer:   string;
+    phonePayer:      string;
+    paymentMethodId: number;
+    methodPayment:   IMethodPayment;
+}
