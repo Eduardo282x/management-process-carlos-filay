@@ -9,6 +9,7 @@ import { Students } from "./pages/students/Students";
 import { Users } from "./pages/users/Users";
 import { MethodPayment } from "./pages/MethodPayment/MethodPayment";
 import './App.css'
+import { InscriptionV2 } from "./pages/inscriptionV2/InscriptionV2";
 function App() {
 
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path='/inicio' element={<Home />} />
           <Route path='/inscripcion' element={<Inscription />} />
+          <Route path='/registros' element={<InscriptionV2 />} />
           <Route path='/grados' element={<Grades />} />
           <Route path='/pagos' element={<Payments />} />
           <Route path='/metodos-de-pago' element={<MethodPayment />} />

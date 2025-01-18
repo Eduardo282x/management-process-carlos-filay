@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
-import { getDataApi } from '../../backend/basicAPI';
+import { getDataApi, postDataApi } from '../../backend/basicAPI';
 import { IGrades } from '../../interfaces/inscription.interface';
 import { IMethodPayment } from '../../interfaces/payment.interface';
-import InscriptionForm from './InscriptionForm';
+import InscriptionForm, { IDataInscription } from './InscriptionForm';
+import { SnackbarComponent } from '../../components/SnackbarComponent';
+import { BaseResponse } from '../../interfaces/base.interface';
 
 export const Inscription = () => {
 
+    const [open, setOpen] = useState<boolean>(false);
+    const [baseResponse, setBaseResponse] = useState<BaseResponse>({} as BaseResponse);
     const [grades, setGrades] = useState<IGrades[]>([]);
     const [methodPayment, setMethodPayment] = useState<IMethodPayment[]>([]);
 
@@ -29,13 +33,26 @@ export const Inscription = () => {
         getMethodPaymentApi();
     }, [])
 
+    const completeInscription = async (dataInscription: IDataInscription) => {
+        await postDataApi('/registration', dataInscription).then((response: BaseResponse) => {
+            setBaseResponse(response);
+            setOpen(true);
+            setStep(1);
+        })
+    }
+
     return (
         <div className='w-full'>
 
             <h1 className=' text-4xl text-blue-800 font-semibold mb-8'>Proceso de inscripción del estudiante</h1>
 
-            <InscriptionForm grades={grades} methodPayment={methodPayment} step={step} setStep={setStep} />
+            <InscriptionForm grades={grades} methodPayment={methodPayment} step={step} setStep={setStep} onSubmit={completeInscription} />
 
+            <SnackbarComponent
+                baseResponse={baseResponse}
+                open={open}
+                setOpen={setOpen}
+            ></SnackbarComponent>
         </div>
     )
 }

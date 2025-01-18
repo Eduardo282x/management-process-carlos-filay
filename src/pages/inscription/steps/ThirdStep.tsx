@@ -1,4 +1,4 @@
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
     TextField,
     Select,
@@ -8,23 +8,29 @@ import {
     FormHelperText
 } from "@mui/material";
 import { IMethodPayment } from '../../../interfaces/payment.interface';
-import { formSchema } from '../inscription.data';
-import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IPayForm, paySchema } from './thirdStep.data';
 
 interface ThirdStepProps {
-    control: Control<z.infer<typeof formSchema>>;
-    errors: FieldErrors<z.infer<typeof formSchema>>;
-    methodPayment: any;
+    methodPayment: IMethodPayment[];
+    onSubmit: (data: IPayForm) => IPayForm;
+    valuesForm: IPayForm
 }
 
-export default function ThirdStep({control, errors, methodPayment} : ThirdStepProps) {
+export default function ThirdStep({ methodPayment, onSubmit, valuesForm }: ThirdStepProps) {
+
+    const { control, formState: { errors }, handleSubmit } = useForm<IPayForm>({
+        defaultValues: valuesForm,
+        resolver: zodResolver(paySchema)
+    })
+
     return (
-        <div>
+        <form id="step-form-3" onSubmit={handleSubmit(onSubmit)}>
             <p className='text-2xl font-semibold mb-5'>Registro del Pago</p>
             <div className='flex items-start justify-start w-full flex-wrap gap-5'>
-                <div className='w-60'>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="pagoNombre"
+                        name="ownerName"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -32,15 +38,15 @@ export default function ThirdStep({control, errors, methodPayment} : ThirdStepPr
                                 label="Nombre"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.pagoNombre}
-                                helperText={errors.pagoNombre?.message}
+                                error={!!errors.ownerName}
+                                helperText={errors.ownerName?.message}
                             />
                         )}
                     />
                 </div>
-                <div className='w-60'>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="pagoApellido"
+                        name="ownerLastname"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -48,15 +54,15 @@ export default function ThirdStep({control, errors, methodPayment} : ThirdStepPr
                                 label="Apellido"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.pagoApellido}
-                                helperText={errors.pagoApellido?.message}
+                                error={!!errors.ownerLastname}
+                                helperText={errors.ownerLastname?.message}
                             />
                         )}
                     />
                 </div>
-                <div className='w-60'>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="pagoCedula"
+                        name="identify"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -64,15 +70,15 @@ export default function ThirdStep({control, errors, methodPayment} : ThirdStepPr
                                 label="Cédula"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.pagoCedula}
-                                helperText={errors.pagoCedula?.message}
+                                error={!!errors.identify}
+                                helperText={errors.identify?.message}
                             />
                         )}
                     />
                 </div>
-                <div className='w-60'>
+                <div className='w-[14rem]'>
                     <Controller
-                        name="pagoTelefono"
+                        name="phone"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -80,15 +86,31 @@ export default function ThirdStep({control, errors, methodPayment} : ThirdStepPr
                                 label="Teléfono"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.pagoTelefono}
-                                helperText={errors.pagoTelefono?.message}
+                                error={!!errors.phone}
+                                helperText={errors.phone?.message}
+                            />
+                        )}
+                    />
+                </div>
+                <div className='w-[14rem]'>
+                    <Controller
+                        name="period"
+                        control={control}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                label="Periodo académico"
+                                variant="outlined"
+                                fullWidth
+                                error={!!errors.period}
+                                helperText={errors.period?.message}
                             />
                         )}
                     />
                 </div>
                 <div className='w-[79%]'>
                     <Controller
-                        name="pagoMonto"
+                        name="amount"
                         control={control}
                         render={({ field }) => (
                             <TextField
@@ -97,17 +119,17 @@ export default function ThirdStep({control, errors, methodPayment} : ThirdStepPr
                                 type="number"
                                 variant="outlined"
                                 fullWidth
-                                error={!!errors.pagoMonto}
-                                helperText={errors.pagoMonto?.message}
+                                error={!!errors.amount}
+                                helperText={errors.amount?.message}
                             />
                         )}
                     />
                 </div>
                 <div className='w-[19%]'>
-                    <FormControl fullWidth error={!!errors.pagoMetodo}>
+                    <FormControl fullWidth error={!!errors.currency}>
                         <InputLabel id="moneda-label">Moneda</InputLabel>
                         <Controller
-                            name="pagoMoneda"
+                            name="currency"
                             control={control}
                             render={({ field }) => (
                                 <Select
@@ -120,14 +142,14 @@ export default function ThirdStep({control, errors, methodPayment} : ThirdStepPr
                                 </Select>
                             )}
                         />
-                        <FormHelperText>{errors.pagoMoneda?.message}</FormHelperText>
+                        <FormHelperText>{errors.currency?.message}</FormHelperText>
                     </FormControl>
                 </div>
                 <div className='w-full'>
-                    <FormControl fullWidth error={!!errors.pagoMetodo}>
+                    <FormControl fullWidth error={!!errors.paymentMethodId}>
                         <InputLabel id="metodo-pago-label">Método de Pago</InputLabel>
                         <Controller
-                            name="pagoMetodo"
+                            name="paymentMethodId"
                             control={control}
                             render={({ field }) => (
                                 <Select
@@ -141,10 +163,10 @@ export default function ThirdStep({control, errors, methodPayment} : ThirdStepPr
                                 </Select>
                             )}
                         />
-                        <FormHelperText>{errors.pagoMetodo?.message}</FormHelperText>
+                        <FormHelperText>{errors.paymentMethodId?.message}</FormHelperText>
                     </FormControl>
                 </div>
             </div>
-        </div>
+        </form>
     )
 }
