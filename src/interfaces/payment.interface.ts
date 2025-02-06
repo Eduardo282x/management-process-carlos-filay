@@ -1,13 +1,15 @@
+import { IStudents } from "./students.interface";
+
 export interface IMethodPayment {
-    id:          number;
-    typeId:      number;
-    bank:        string;
+    id: number;
+    typeId: number;
+    bank: string;
     countNumber: string;
-    identify:    string;
-    email:       string;
-    phone:       string;
-    owner:       string;
-    type:        string;
+    identify: string;
+    email: string;
+    phone: string;
+    owner: string;
+    type: string;
 }
 
 export interface IBank {
@@ -15,14 +17,15 @@ export interface IBank {
 }
 
 export interface IPayments {
-    id:              number;
-    amount:          number;
-    currency:        string;
-    datePay:         Date;
-    namePayer:       string;
-    lastNamePayer:   string;
-    identifyPayer:   string;
-    phonePayer:      string;
+    id: number;
+    amount: number;
+    currency: string;
+    student: IStudents;
+    datePay: Date;
+    namePayer: string;
+    lastNamePayer: string;
+    identifyPayer: string;
+    phonePayer: string;
     paymentMethodId: number;
-    methodPayment:   IMethodPayment;
+    methodPayment: IMethodPayment;
 }

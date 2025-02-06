@@ -19,6 +19,16 @@ export const paymentColumns: IColumns[] = [
         element: (data: IPayments) => formatNumberWithDots(data.identifyPayer,'V-',''),
     },
     {
+        label: 'Nombre Estudiante',
+        column: 'namePayer',
+        element: (data: IPayments) => `${data.student.firstName} ${data.student.lastName}`,
+    },
+    {
+        label: 'Cédula Estudiante',
+        column: 'identifyPayer',
+        element: (data: IPayments) => formatNumberWithDots(data.student.identify,'V-',''),
+    },
+    {
         label: 'Teléfono',
         column: 'phonePayer',
         element: (data: IPayments) => data.phonePayer,
@@ -26,7 +36,7 @@ export const paymentColumns: IColumns[] = [
     {
         label: 'Cantidad',
         column: 'amount',
-        element: (data: IPayments) => `${data.amount} ${data.currency}`,
+        element: (data: IPayments) => `${formatNumberWithDots(data.amount,'','')},00 ${data.currency}`,
     },
     {
         label: 'Fecha',

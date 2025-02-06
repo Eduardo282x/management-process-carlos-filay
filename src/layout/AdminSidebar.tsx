@@ -35,7 +35,7 @@ const navItems: NavItem[] = [
         icon: Wallet,
     },
     {
-        title: "Pagos",
+        title: "Pagos Inscripción",
         href: "/pagos",
         icon: CreditCard,
     },

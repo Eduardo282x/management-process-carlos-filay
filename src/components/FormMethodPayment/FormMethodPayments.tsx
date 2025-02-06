@@ -25,7 +25,7 @@ export const FormMethodPayments: FC<IFormMethodPayment> = ({ title, btnText, act
             if (field.name === 'owner') {
                 return true;
             }
-            
+
             if (currency === 'Bs') {
                 return !field.separate?.includes('Zelle'); // Excluir Zelle si la moneda es Bs
             }
@@ -52,6 +52,7 @@ export const FormMethodPayments: FC<IFormMethodPayment> = ({ title, btnText, act
     });
 
     const onSubmit = (form: FormValues) => {
+        if (currency === 'USD') { form.type = 'Zelle' }
         func(action, form)
     }
 
