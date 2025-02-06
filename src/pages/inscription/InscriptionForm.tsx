@@ -174,7 +174,7 @@ export default function InscriptionForm({ grades, methodPayment, step, setStep, 
                 </div>
             </div>
 
-            {step === 1 && <FirstStep valuesForm={formData.student} grades={grades} onSubmit={handleStepData} />}
+            {step === 1 && <FirstStep valuesForm={formData.student} grades={grades} isNew={isNew} onSubmit={handleStepData} />}
             {step === 2 && (
                 <>
                     <SecondStep index={0} valuesForm={formData.parents[0]} label='Información del Padre' onSubmit={(data) => handleStepData(data, 0)} />

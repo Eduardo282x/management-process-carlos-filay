@@ -15,7 +15,7 @@ const navItems: NavItem[] = [
         icon: BookOpen,
     },
     {
-        title: "Registros",
+        title: "Registros Inscripción",
         href: "/registros",
         icon: ListChecks,
     },
