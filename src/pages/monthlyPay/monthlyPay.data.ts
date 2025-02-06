@@ -8,6 +8,7 @@ export interface IMonthlyPay {
     id: number;
     name: string;
     identify: string;
+    grade: string;
     totalAmount: number;
     totalPaid: number;
     remaining: number;
@@ -22,9 +23,14 @@ export const monthlyPayColumns: IColumns[] = [
         element: (data: IMonthlyPay) => data.name,
     },
     {
-        label: 'Cedula',
+        label: 'Cédula',
         column: 'identify',
         element: (data: IMonthlyPay) => formatNumberWithDots(data.identify, 'V-', ''),
+    },
+    {
+        label: 'Grado',
+        column: 'grade',
+        element: (data: IMonthlyPay) => data.grade,
     },
     {
         label: 'Mensualidad',

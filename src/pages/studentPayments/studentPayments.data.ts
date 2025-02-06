@@ -1,11 +1,13 @@
 import { IColumns } from "../../interfaces/table.interface";
-import { formatNumberWithDots } from "../../utils/formaters";
+import { formatDate, formatNumberWithDots } from "../../utils/formaters";
 import { monthName } from "../monthly/monthly.data";
 
 export interface StudentPayment {
     studentId:   number;
     studentName: string;
     studentIdentify: string;
+    identifyPayer: string;
+    namePayer: string;
     month:       number;
     amountPaid:  number;
     datePay:     Date;
@@ -19,9 +21,19 @@ export const monthlyPayColumns: IColumns[] = [
         element: (data: StudentPayment) => data.studentName,
     },
     {
-        label: 'Cedula',
+        label: 'Cédula',
         column: 'studentIdentify',
         element: (data: StudentPayment) => formatNumberWithDots(data.studentIdentify, 'V-', ''),
+    },
+    {
+        label: 'Pagador',
+        column: 'namePayer',
+        element: (data: StudentPayment) => data.namePayer,
+    },
+    {
+        label: 'Cédula Pagador',
+        column: 'identifyPayer',
+        element: (data: StudentPayment) => formatNumberWithDots(data.identifyPayer, 'V-', ''),
     },
     {
         label: 'Mes',
@@ -32,5 +44,10 @@ export const monthlyPayColumns: IColumns[] = [
         label: 'Pago',
         column: 'amountPaid',
         element: (data: StudentPayment) => formatNumberWithDots(data.amountPaid, '', '$'),
+    },
+    {
+        label: 'Fecha',
+        column: 'datePay',
+        element: (data: StudentPayment) => formatDate(data.datePay),
     }
 ];
