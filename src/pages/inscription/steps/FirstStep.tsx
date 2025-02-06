@@ -16,10 +16,11 @@ import { useEffect, useState } from 'react';
 interface FirstStepProps {
     grades: IGrades[];
     onSubmit: (data: IStudentForm) => IStudentForm
-    valuesForm: IStudentForm
+    valuesForm: IStudentForm | null,
+    isNew: boolean
 }
 
-export default function FirstStep({ grades, onSubmit, valuesForm }: FirstStepProps) {
+export default function FirstStep({ grades, onSubmit, valuesForm, isNew }: FirstStepProps) {
 
     const [disabledFields, setDisabledFields] = useState<boolean>(false);
 
@@ -34,9 +35,9 @@ export default function FirstStep({ grades, onSubmit, valuesForm }: FirstStepPro
     useEffect(() => {
         if (valuesForm) {
             reset(valuesForm);
-            setDisabledFields(true);
+            setDisabledFields(!isNew);
         }
-    }, [valuesForm, reset]);
+    }, [valuesForm, reset, isNew]);
 
     return (
         <form id="step-form-1" onSubmit={handleSubmit(onSubmit)}>
