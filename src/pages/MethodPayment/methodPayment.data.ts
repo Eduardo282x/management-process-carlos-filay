@@ -65,7 +65,8 @@ export const methodPaymentDataForm: IDataForm[] = [
         type: 'select',
         options: [
             {value: 'Pago Movil', label: 'Pago Movil'},
-            {value: 'Transferencia', label: 'Transferencia'}
+            {value: 'Transferencia', label: 'Transferencia'},
+            {value: 'Pago Movil', label: 'Efectivo'},
         ],
         name: 'type',
         separate: ['Pago Movil','Transferencia']

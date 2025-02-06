@@ -11,7 +11,7 @@ import { IGrades } from '../../../interfaces/inscription.interface';
 import { IDataFormSteps } from '../inscription.data';
 import { firstDataForm, IStudentForm, studentSchema } from './firstStep.data';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface FirstStepProps {
     grades: IGrades[];
@@ -19,17 +19,24 @@ interface FirstStepProps {
     valuesForm: IStudentForm
 }
 
-
 export default function FirstStep({ grades, onSubmit, valuesForm }: FirstStepProps) {
 
+    const [disabledFields, setDisabledFields] = useState<boolean>(false);
+
     const { control, formState: { errors }, handleSubmit, reset } = useForm<IStudentForm>({
-        defaultValues: valuesForm,
+        defaultValues: firstDataForm.reduce((defaults, form) => {
+            defaults[form.formControl] = ''; // Valor inicial explícito para todos los campos
+            return defaults;
+        }, {}),
         resolver: zodResolver(studentSchema)
     })
 
     useEffect(() => {
-        reset(valuesForm)
-    },[valuesForm])
+        if (valuesForm) {
+            reset(valuesForm);
+            setDisabledFields(true);
+        }
+    }, [valuesForm, reset]);
 
     return (
         <form id="step-form-1" onSubmit={handleSubmit(onSubmit)}>
@@ -42,12 +49,14 @@ export default function FirstStep({ grades, onSubmit, valuesForm }: FirstStepPro
                             <Controller
                                 name={form.formControl}
                                 control={control}
+                                defaultValue=""
                                 render={({ field }) => (
                                     <TextField
                                         {...field}
                                         label={form.label}
                                         variant="outlined"
                                         fullWidth
+                                        disabled={disabledFields === true && form.formControl !== 'age' && form.formControl !== 'address' ? true : false}
                                         error={!!errors[form.formControl]}
                                         helperText={errors[form.formControl]?.message}
                                     />
@@ -66,6 +75,7 @@ export default function FirstStep({ grades, onSubmit, valuesForm }: FirstStepPro
                                             {...field}
                                             labelId="grado-label"
                                             label={form.label}
+                                            disabled={disabledFields}
                                             className='w-full'
                                         >
                                             {grades && grades.map((grade: IGrades, index: number) => (

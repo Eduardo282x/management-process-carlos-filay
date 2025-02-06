@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, PenTool, CreditCard, Users, Wallet, LogOut,ListChecks } from 'lucide-react'
+import { BookOpen, GraduationCap, PenTool, CreditCard, Users, Wallet, LogOut,ListChecks, Banknote, CalendarFold, CalendarCheck } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../components/Logo'
 
@@ -38,6 +38,21 @@ const navItems: NavItem[] = [
         title: "Pagos",
         href: "/pagos",
         icon: CreditCard,
+    },
+    {
+        title: "Mensualidad",
+        href: "/mensualidad",
+        icon: CalendarFold,
+    },
+    {
+        title: "Pago Mensualidad",
+        href: "/mensualidad-pagos",
+        icon: CalendarCheck,
+    },
+    {
+        title: "Pago Estudiantes",
+        href: "/mensualidad-pagos-estudiantes",
+        icon: Banknote,
     },
     {
         title: "Usuarios",

@@ -27,12 +27,17 @@ export const studentColumns: IColumns[] = [
         element: (data: IStudents) => `${data.age} años`,
     },
     {
-        label: 'Estado',
-        column: 'status',
-        icon: true,
-        element: (data: IStudents) => data.status ? 'success' : 'error',
-        canFilter: false
+        label: 'Grado',
+        column: 'grade',
+        element: (data: IStudents) => `${data.grade.grade}`,
     },
+    // {
+    //     label: 'Estado',
+    //     column: 'status',
+    //     icon: true,
+    //     element: (data: IStudents) => data.status ? 'success' : 'error',
+    //     canFilter: false
+    // },
     {
         label: 'Editar',
         column: 'edit',
@@ -48,7 +53,7 @@ export interface IStudentForm {
     firstName: string;
     lastName: string;
     identify: string;
-    age: string;
+    age: number;
     status: boolean;
 }
 
@@ -83,7 +88,7 @@ export const studentDefaultValues : IStudentForm = {
     firstName: '',
     lastName: '',
     identify: '',
-    age: '',
+    age: 0,
     status: true,
 }
 
@@ -91,5 +96,5 @@ export const studentValidationSchema: object = z.object({
     firstName: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
     lastName: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
     identify: z.string().refine(text => text !== '', { message: 'El campo es requerido' }),
-    age: z.string().refine(text => text !== '', { message: 'El campo es requerido' })
+    age: z.coerce.number({ message: 'El campo es requerido' })
 });
