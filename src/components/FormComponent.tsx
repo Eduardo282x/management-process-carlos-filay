@@ -41,7 +41,7 @@ export const FormComponent = ({ title, action, dataForm, defaultValues, validati
                         </div>
                     ) ||
                     (form.type == 'number' &&
-                        <div key={index} className="flex flex-col gap-2 my-8">
+                        <div key={index} className="flex flex-col gap-2 !my-6">
                             <label className='font-normal'>{form.label}</label>
                             <input
                                 type="number"
@@ -52,7 +52,7 @@ export const FormComponent = ({ title, action, dataForm, defaultValues, validati
                         </div>
                     ) ||
                     (form.type == 'email' &&
-                        <div key={index} className="flex flex-col gap-2 my-8">
+                        <div key={index} className="flex flex-col gap-2 my-6">
                             <label className='font-normal'>{form.label}</label>
                             <input
                                 type="email"
@@ -63,11 +63,12 @@ export const FormComponent = ({ title, action, dataForm, defaultValues, validati
                         </div>
                     ) ||
                     (form.type == 'select' &&
-                        <div key={index} className="flex flex-col gap-2 my-8">
+                        <div key={index} className="flex flex-col gap-2 !my-6">
                             <label className='font-normal'>{form.label}</label>
                             <select
                                 {...register(form.name)}
                                 className={`w-full p-3 rounded-lg  border-gray-300 border ${errors[form.name]?.message ? 'border-red-500' : 'border-blue-200'} focus:border-blue-500 selectOption`}  >
+                                <option selected hidden>Seleccionar</option>
                                 {form.options?.map((opt: IOptions) => (
                                     <option key={opt.value} value={Number(opt.value)}>{opt.label}</option>
                                 ))}
@@ -77,7 +78,7 @@ export const FormComponent = ({ title, action, dataForm, defaultValues, validati
                         </div>
                     ) ||
                     (form.type == 'textArea' &&
-                        <div key={index} className="flex flex-col gap-2 my-8">
+                        <div key={index} className="flex flex-col gap-2 my-6">
                             <label className='font-normal'>{form.label}</label>
                             <textarea
                                 className={`w-full p-3 rounded-lg border-gray-300 border ${errors[form.name]?.message ? 'border-red-500' : 'border-blue-200'} focus:border-blue-500`}

@@ -4,6 +4,7 @@ import {
 } from "@mui/material";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IParentForm, parentsSchema } from './secondStep.data';
+import { useEffect, useState } from 'react';
 
 interface SecondtStepProps {
     label: string;
@@ -13,11 +14,19 @@ interface SecondtStepProps {
 }
 
 export default function SecondStep({ onSubmit, label, index, valuesForm }: SecondtStepProps) {
+    const [disabledFields, setDisabledFields] = useState<boolean>(false);
 
-    const { control, formState: { errors }, handleSubmit } = useForm<IParentForm>({
+    const { control, formState: { errors }, reset, handleSubmit } = useForm<IParentForm>({
         defaultValues: valuesForm,
         resolver: zodResolver(parentsSchema)
     })
+
+    useEffect(() => {
+        if (valuesForm) {
+            reset(valuesForm);
+            setDisabledFields(true);
+        }
+    }, [valuesForm, reset]);
 
     return (
         <form id={`step-form-2-${index}`} onSubmit={handleSubmit(onSubmit)}>
@@ -33,6 +42,7 @@ export default function SecondStep({ onSubmit, label, index, valuesForm }: Secon
                                 label="Nombre"
                                 variant="outlined"
                                 fullWidth
+                                disabled={disabledFields}
                                 error={!!errors.firstName}
                                 helperText={errors.firstName?.message}
                             />
@@ -49,6 +59,7 @@ export default function SecondStep({ onSubmit, label, index, valuesForm }: Secon
                                 label="Apellido"
                                 variant="outlined"
                                 fullWidth
+                                disabled={disabledFields}
                                 error={!!errors.lastName}
                                 helperText={errors.lastName?.message}
                             />
@@ -65,6 +76,7 @@ export default function SecondStep({ onSubmit, label, index, valuesForm }: Secon
                                 label="Cédula"
                                 variant="outlined"
                                 fullWidth
+                                disabled={disabledFields}
                                 error={!!errors.identify}
                                 helperText={errors.identify?.message}
                             />

@@ -11,6 +11,9 @@ import { MethodPayment } from "./pages/MethodPayment/MethodPayment";
 import './App.css'
 import { InscriptionV2 } from "./pages/inscriptionV2/InscriptionV2";
 import { Notes } from "./pages/notes/Notes";
+import { Monthly } from "./pages/monthly/Monthly";
+import { MonthlyPay } from "./pages/monthlyPay/MonthlyPay";
+import { StudentPayments } from "./pages/studentPayments/StudentPayments";
 function App() {
 
   return (
@@ -26,6 +29,9 @@ function App() {
           <Route path='/notas' element={<Notes />} />
           <Route path='/grados' element={<Grades />} />
           <Route path='/pagos' element={<Payments />} />
+          <Route path='/mensualidad' element={<Monthly />} />
+          <Route path='/mensualidad-pagos' element={<MonthlyPay />} />
+          <Route path='/mensualidad-pagos-estudiantes' element={<StudentPayments />} />
           <Route path='/metodos-de-pago' element={<MethodPayment />} />
           <Route path='/estudiantes' element={<Students />} />
           <Route path='/usuarios' element={<Users />} />
