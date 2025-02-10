@@ -14,6 +14,8 @@ import { Notes } from "./pages/notes/Notes";
 import { Monthly } from "./pages/monthly/Monthly";
 import { MonthlyPay } from "./pages/monthlyPay/MonthlyPay";
 import { StudentPayments } from "./pages/studentPayments/StudentPayments";
+import { Subjects } from "./pages/subjects/Subjects";
+import { Activities } from "./pages/activities/Activities";
 function App() {
 
   return (
@@ -28,6 +30,8 @@ function App() {
           <Route path='/registros' element={<InscriptionV2 />} />
           <Route path='/notas' element={<Notes />} />
           <Route path='/grados' element={<Grades />} />
+          <Route path='/materias' element={<Subjects />} />
+          <Route path='/actividades' element={<Activities />} />
           <Route path='/pagos' element={<Payments />} />
           <Route path='/mensualidad' element={<Monthly />} />
           <Route path='/mensualidad-pagos' element={<MonthlyPay />} />

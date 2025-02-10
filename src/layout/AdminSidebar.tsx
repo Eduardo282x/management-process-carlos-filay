@@ -1,4 +1,4 @@
-import { BookOpen, GraduationCap, PenTool, CreditCard, Users, Wallet, LogOut,ListChecks, Banknote, CalendarFold, CalendarCheck } from 'lucide-react'
+import { BookOpen, GraduationCap, PenTool, CreditCard, Users, Wallet, LogOut,ListChecks, Banknote, CalendarFold, CalendarCheck, Dock, BookA, NotebookText } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Logo from '../components/Logo'
 
@@ -23,6 +23,21 @@ const navItems: NavItem[] = [
         title: "Estudiantes",
         href: "/estudiantes",
         icon: GraduationCap,
+    },
+    {
+        title: "Salones",
+        href: "/grados",
+        icon: Dock,
+    },
+    {
+        title: "Materias",
+        href: "/materias",
+        icon: BookA,
+    },
+    {
+        title: "Actividades",   
+        href: "/actividades",
+        icon: NotebookText,
     },
     {
         title: "Notas",
@@ -73,10 +88,10 @@ export const AdminSidebar = () => {
     return (
         <div className='w-60'>
             <div className="flex flex-col justify-between h-full p-4">
-                <nav className="flex flex-col space-y-2 ">
                     <div className="flex items-center justify-center">
                         <Logo widthLogo="w-20" heightLogo="h-20"></Logo>
                     </div>
+                <nav className="flex flex-col space-y-2 overflow-auto ">
                     {navItems.map((item: NavItem, index: number) => (
                         <div
                             key={index}

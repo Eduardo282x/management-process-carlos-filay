@@ -1,69 +1,50 @@
-import React, { useEffect, useState } from 'react'
-import Filter from '../../components/Filter';
-import { Loader } from '../../components/loaders/Loader';
 import { Dialog } from '@mui/material';
 import { CirclePlus } from 'lucide-react';
+import { useEffect, useState } from 'react'
 import { BaseApiReturn, BaseApi } from '../../backend/BaseAPI';
 import { getDataApi } from '../../backend/basicAPI';
 import { FormComponent } from '../../components/FormComponent';
 import { SnackbarComponent } from '../../components/SnackbarComponent';
 import TableComponent from '../../components/TableComponent';
 import { BaseResponse } from '../../interfaces/base.interface';
-import { IDataForm } from '../../interfaces/form.interface';
-import { IActivities, ISubjects } from '../../interfaces/inscription.interface';
+import { IGrades, ISubjects } from '../../interfaces/inscription.interface';
 import { actionsValid } from '../../interfaces/table.interface';
-import { dataFormNotes, INotesForm, notesDefaultValues, notesColumns, notesValidationSchema } from './notes.data';
-import { IStudents } from '../../interfaces/students.interface';
+import { dataFormSubjects, ISubjectsForm, subjectsColumns, subjectsDefaultValues, subjectsValidationSchema } from './subjects.data';
+import Filter from '../../components/Filter';
+import { IDataForm } from '../../interfaces/form.interface';
+import { Loader } from '../../components/loaders/Loader';
 
-export const Notes = () => {
-    const [activities, setActivities] = useState<ISubjects[]>([]);
+export const Subjects = () => {
+    const [subjects, setSubjects] = useState<ISubjects[]>([]);
     const [dataTable, setDataTable] = useState<ISubjects[]>([]);
-    const [dataForm, setDataForm] = useState<IDataForm[]>(dataFormNotes);
+    const [dataForm, setDataForm] = useState<IDataForm[]>(dataFormSubjects);
     const [action, setAction] = useState<actionsValid>('add');
     const [loading, setLoading] = useState<boolean>(true);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const [defaultValues, setDefaultValues] = useState<INotesForm>(notesDefaultValues);
+    const [defaultValues, setDefaultValues] = useState<ISubjectsForm>(subjectsDefaultValues);
     const [snackbar, setSnackbar] = useState<BaseResponse>({} as BaseResponse);
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
     const handleClose = () => setOpenDialog(false);
 
-    const getNotessApi = async () => {
+    const getSubjectsApi = async () => {
         setLoading(true);
-        await getDataApi('/notes').then((response: ISubjects[]) => {
-            setActivities(response);
+        await getDataApi('/subjects').then((response: ISubjects[]) => {
+            setSubjects(response);
             setLoading(false)
         })
     }
 
-    const getActivites = async () => {
-        const response: IActivities[] = await getDataApi('/activities');
+    const getGrades = async () => {
+        const response: IGrades[] = await getDataApi('/grades');
         setDataForm((prevDataForm) => {
             return prevDataForm.map((form) => {
-                if (form.name === 'activityId') {
+                if (form.name === 'gradeId') {
                     return {
                         ...form,
-                        options: response.map((act) => ({
-                            label: act.activity,
-                            value: act.id,
-                        })),
-                    };
-                }
-                return form;
-            });
-        });
-    }
-
-    const getStudentsApi = async () => {
-        const response: IStudents[] = await getDataApi('/students');
-        setDataForm((prevDataForm) => {
-            return prevDataForm.map((form) => {
-                if (form.name === 'studentId') {
-                    return {
-                        ...form,
-                        options: response.map((stu) => ({
-                            label: `${stu.firstName} ${stu.lastName}`,
-                            value: stu.id,
+                        options: response.map((grade) => ({
+                            label: grade.grade,
+                            value: grade.id,
                         })),
                     };
                 }
@@ -73,33 +54,32 @@ export const Notes = () => {
     }
 
     useEffect(() => {
-        getNotessApi();
-        getActivites();
-        getStudentsApi();
+        getSubjectsApi();
+        getGrades();
     }, [])
 
-    const getActionTable = async (action: actionsValid, data: INotesForm) => {
-        const responseBaseApi: BaseApiReturn = await BaseApi(action, data, defaultValues, '/notes');
-        setDefaultValues(responseBaseApi.body as INotesForm);
+    const getActionTable = async (action: actionsValid, data: ISubjects) => {
+        const responseBaseApi: BaseApiReturn = await BaseApi(action, data, defaultValues, '/subjects');
+        setDefaultValues(responseBaseApi.body as ISubjects);
         setAction(responseBaseApi.action)
         if (responseBaseApi.open) { setOpenDialog(true) };
         if (responseBaseApi.close) { setOpenDialog(false) };
         if (responseBaseApi.snackbarMessage.message !== '') {
             setSnackbar(responseBaseApi.snackbarMessage);
             setOpenSnackbar(true);
-            getNotessApi();
+            getSubjectsApi();
         };
     }
 
     return (
         <div className='w-full'>
-            <p className=' text-3xl font-semibold mb-5'>Notas</p>
+            <p className=' text-3xl font-semibold mb-5'>Materia</p>
 
             <div className="flex items-center justify-between w-full my-5">
-                <Filter tableData={activities} setTableData={setDataTable} tableColumns={notesColumns}></Filter>
+                <Filter tableData={subjects} setTableData={setDataTable} tableColumns={subjectsColumns}></Filter>
 
                 <button
-                    onClick={() => getActionTable('add', {} as INotesForm)}
+                    onClick={() => getActionTable('add', {} as ISubjects)}
                     className=' outline-none bg-[#2563eb] hover:bg-[#1e40af] transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
                     <CirclePlus /> Agregar
                 </button>
@@ -107,8 +87,8 @@ export const Notes = () => {
 
             {loading && <Loader></Loader>}
 
-            {!loading && activities.length > 0 && (
-                <TableComponent tableData={dataTable} tableColumns={notesColumns} action={getActionTable} />
+            {!loading && subjects.length > 0 && (
+                <TableComponent tableData={dataTable} tableColumns={subjectsColumns} action={getActionTable} />
             )}
 
             <Dialog
@@ -118,11 +98,11 @@ export const Notes = () => {
                 aria-describedby="alert-dialog-description"
             >
                 <FormComponent
-                    title='Nueva Nota'
+                    title='Nueva Materia'
                     dataForm={dataForm}
                     defaultValues={defaultValues}
-                    validationSchema={notesValidationSchema}
-                    buttonText='Agregar Nota'
+                    validationSchema={subjectsValidationSchema}
+                    buttonText='Agregar Materia'
                     action={action}
                     func={getActionTable}
 
