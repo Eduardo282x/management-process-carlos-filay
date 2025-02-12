@@ -27,5 +27,12 @@ export const registrationColumns: IColumns[] = [
         label: 'Fecha',
         column: 'datePay',
         element: (data: IRegistration) => formatDate(data.startDate),
+    },
+    {
+        label: 'Imprimir',
+        column: 'download',
+        icon: true,
+        element: () => 'download',
+        canFilter: false
     }
 ];

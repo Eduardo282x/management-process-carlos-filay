@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Filter from '../../components/Filter';
 import { Loader } from '../../components/loaders/Loader';
-import { getDataApi } from '../../backend/basicAPI';
+import { getDataApi, getDataFileApi } from '../../backend/basicAPI';
 import TableComponent from '../../components/TableComponent';
 import { actionsValid } from '../../interfaces/table.interface';
 import { IRegistration } from '../../interfaces/registration.interface';
@@ -27,11 +27,23 @@ export const InscriptionV2 = () => {
     const getActionTable = async (action: actionsValid, data: IRegistration) => {
         console.log(action);
         console.log(data);
+
+        if (action === 'download') {
+            const response = await getDataFileApi(`/registration/report/${data.studentId}`);
+
+            const url = window.URL.createObjectURL(response);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = 'Reporte de Inscripción'; // Cambia el nombre del archivo según tus necesidades
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     }
 
     return (
         <div className='w-full'>
-            <p className=' text-3xl font-semibold mb-5'>Registro de alumnos inscriptions</p>
+            <p className=' text-3xl font-semibold mb-5'>Registro de alumnos inscritos</p>
 
             <div className="flex items-center justify-between w-full my-5">
                 <Filter tableData={inscriptions} setTableData={setDataTable} tableColumns={registrationColumns}></Filter>
