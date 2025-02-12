@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { TableContainer, Table, TableHead, TableRow, TableBody, TableCell, TablePagination, Paper, IconButton } from "@mui/material";
-import { Check, Pen, Trash, X } from "lucide-react";
+import { Check, Download, Pen, Trash, X } from "lucide-react";
 import ErrorMessage from "./ErrorMessage";
 import { IColumns, actionsValid } from "../interfaces/table.interface";
 
@@ -31,6 +31,7 @@ export default function TableComponent({ tableData, tableColumns, action }: Tabl
         if (icon === 'edit') return <Pen color="#2563eb"/>;
         if (icon === 'delete') return <Trash color="#ff0000" />;
         if (icon === 'success') return <Check color="#00ff33"/>;
+        if (icon === 'download') return <Download color="#1e40af"/>;
         if (icon === 'error') return <X color="#ff0000" />;
     }
 

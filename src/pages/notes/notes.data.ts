@@ -10,11 +10,19 @@ export interface INotesForm {
     note: number;
 }
 
+export interface INotesDownloadForm {
+    studentId: number;
+}
+
 export const notesDefaultValues: INotesForm = {
     id: 0,
     activityId: 0,
     studentId: 0,
     note: 0,
+}
+
+export const notesDownloadDefaultValues: INotesDownloadForm = {
+    studentId: 0
 }
 
 export const notesColumns: IColumns[] = [
@@ -51,7 +59,7 @@ export const dataFormNotes: IDataForm[] = [
         options: []
     },
     {
-        label: 'Materia',
+        label: 'Actividad',
         name: 'activityId',
         type: 'select',
         value: '',
@@ -65,8 +73,22 @@ export const dataFormNotes: IDataForm[] = [
     },
 ]
 
+export const dataFormDownload: IDataForm[] = [
+    {
+        label: 'Estudiante',
+        name: 'studentId',
+        type: 'select',
+        value: '',
+        options: []
+    }
+]
+
 export const notesValidationSchema = z.object({
     activityId: z.coerce.number({ message: 'El campo es requerido' }),
     studentId: z.coerce.number({ message: 'El campo es requerido' }),
     note: z.coerce.number({ message: 'El campo es requerido' }).min(0).max(20, {message: 'La nota no puede ser mayor a 20'}),
+})
+
+export const notesDonwnloadValidationSchema = z.object({
+    studentId: z.coerce.number({ message: 'El campo es requerido' })
 })
