@@ -109,8 +109,6 @@ export const Notes = () => {
     }
 
     const getActionTableDownload = async (action: actionsValid, data: INotesDownloadForm) => {
-        console.log(action);
-        console.log(data);
         if (action === 'add') {
             setOpenDialogDownload(true)
             setAction('download')

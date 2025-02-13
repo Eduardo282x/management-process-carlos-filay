@@ -5,8 +5,10 @@ import { IOptions } from '../interfaces/base.interface';
 import { IForm, FormValues, IDataForm } from '../interfaces/form.interface';
 import { X } from 'lucide-react';
 import { IconButton, Switch } from '@mui/material';
+// import { useState } from 'react';
 
 export const FormComponent = ({ title, action, dataForm, defaultValues, validationSchema, buttonText, func }: IForm) => {
+    // const [optionsFiltered, setOptionFiltered] = useState<IOptions[]>([]);
 
     const { register, handleSubmit, control, formState: { errors } } = useForm<FormValues>({
         defaultValues,

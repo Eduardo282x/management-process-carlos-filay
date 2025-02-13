@@ -25,9 +25,6 @@ export const InscriptionV2 = () => {
     }, [])
 
     const getActionTable = async (action: actionsValid, data: IRegistration) => {
-        console.log(action);
-        console.log(data);
-
         if (action === 'download') {
             const response = await getDataFileApi(`/registration/report/${data.studentId}`);
 
@@ -43,7 +40,7 @@ export const InscriptionV2 = () => {
 
     return (
         <div className='w-full'>
-            <p className=' text-3xl font-semibold mb-5'>Registro de alumnos inscritos</p>
+            <p className=' text-3xl font-semibold mb-5'>Historial de Registro de alumnos inscritos</p>
 
             <div className="flex items-center justify-between w-full my-5">
                 <Filter tableData={inscriptions} setTableData={setDataTable} tableColumns={registrationColumns}></Filter>
