@@ -43,11 +43,24 @@ export const FormMethodPayments: FC<IFormMethodPayment> = ({ title, btnText, act
             return field.separate?.includes(type) || !field.separate;
         });
 
+        if(type === 'Efectivo'){
+            const setValuesEfectivo = {
+                type: 'Efectivo',
+                bank: 'Efectivo',
+                countNumber: '',
+                identify: '',
+                email: '',
+                phone: '',
+                owner: 'Carlos Filay',
+            }
+            reset(setValuesEfectivo)
+        }
+        
         setChangeDataForm(updatedDataForm);
     };
 
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
         defaultValues,
     });
 

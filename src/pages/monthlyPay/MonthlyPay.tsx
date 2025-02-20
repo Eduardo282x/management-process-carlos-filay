@@ -1,5 +1,5 @@
 import { Dialog } from '@mui/material';
-import { CirclePlus } from 'lucide-react';
+import { CirclePlus, Download } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { BaseApiReturn, BaseApi } from '../../backend/BaseAPI';
 import { getDataApi } from '../../backend/basicAPI';
@@ -134,9 +134,9 @@ export const MonthlyPay = () => {
     }
 
     const filterStudentByGrade = (grade: string) => {
-        if(grade === ''){setFilterMonthly(monthly)}
+        if (grade === '') { setFilterMonthly(monthly) }
 
-        if(grade !== ''){
+        if (grade !== '') {
             const monthlyFilter = monthly.filter(mon => mon.grade === grade);
             setFilterMonthly(monthlyFilter)
         }
@@ -144,12 +144,10 @@ export const MonthlyPay = () => {
 
     return (
         <div className='w-full'>
-            <p className=' text-3xl font-semibold mb-5'>Pagos de Mensualidad</p>
+            <p className='text-3xl font-semibold mb-5'>Pagos de Mensualidad</p>
 
             <div className="flex items-center justify-between w-full my-5">
                 <Filter tableData={monthlyFilter} setTableData={setDataTable} tableColumns={monthlyPayColumns}></Filter>
-
-
 
                 <div className="flex flex-col gap-2 w-80 -mt-6">
                     <label className='font-semibold'>Grados</label>
@@ -164,23 +162,19 @@ export const MonthlyPay = () => {
                     </select>
                 </div>
 
-                {/* <div className="flex flex-col gap-2 !my-6">
-                    <label className='font-normal'>{form.label}</label>
-                    <select
-                        {...register(form.name)}
-                        className={`w-full p-3 rounded-lg  border-gray-300 border focus:border-blue-500 selectOption`}  >
-                        <option selected hidden>Seleccionar</option>
-                        {form.options?.map((opt: IOptions) => (
-                            <option key={opt.value} value={Number(opt.value)}>{opt.label}</option>
-                        ))}
-                    </select>
-                </div> */}
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => getActionTable('add', {} as IPayMonthly)}
+                        className=' outline-none bg-[#2563eb] hover:bg-[#1e40af] transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
+                        <CirclePlus /> Agregar
+                    </button>
 
-                <button
-                    onClick={() => getActionTable('add', {} as IPayMonthly)}
-                    className=' outline-none bg-[#2563eb] hover:bg-[#1e40af] transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
-                    <CirclePlus /> Agregar
-                </button>
+                    <button
+                        onClick={() => getActionTable('add', {} as IPayMonthly)}
+                        className=' outline-none bg-green-500 hover:bg-green-700 transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
+                        <Download />Imprimir
+                    </button>
+                </div>
             </div>
 
             {loading && <Loader></Loader>}

@@ -28,7 +28,7 @@ export const studentColumns: IColumns[] = [
     },
     {
         label: 'Grado',
-        column: 'grade',
+        column: 'grade.grade',
         element: (data: IStudents) => `${data.grade.grade}`,
     },
     // {

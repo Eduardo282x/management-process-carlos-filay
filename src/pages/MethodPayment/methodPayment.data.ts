@@ -44,7 +44,7 @@ export const methodPaymentColumns: IColumns[] = [
         label: 'Editar',
         column: 'edit',
         icon: true,
-        element: () => 'edit',
+        element: (data: IMethodPayment) =>  data.type !== 'Efectivo'  ? 'edit' : '',
         canFilter: false
     },
     {
@@ -66,10 +66,10 @@ export const methodPaymentDataForm: IDataForm[] = [
         options: [
             {value: 'Pago Movil', label: 'Pago Movil'},
             {value: 'Transferencia', label: 'Transferencia'},
-            {value: 'Pago Movil', label: 'Efectivo'},
+            {value: 'Efectivo', label: 'Efectivo'},
         ],
         name: 'type',
-        separate: ['Pago Movil','Transferencia']
+        separate: ['Pago Movil','Transferencia','Efectivo']
     },
     {
         label: 'Banco',

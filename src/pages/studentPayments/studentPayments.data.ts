@@ -17,7 +17,7 @@ export interface StudentPayment {
 export const monthlyPayColumns: IColumns[] = [
     {
         label: 'Estudiantes',
-        column: 'name',
+        column: 'studentName',
         element: (data: StudentPayment) => data.studentName,
     },
     {
@@ -37,7 +37,7 @@ export const monthlyPayColumns: IColumns[] = [
     },
     {
         label: 'Mes',
-        column: 'totalAmount',
+        column: 'month',
         element: (data: StudentPayment) => monthName(data.month),
     },
     {

@@ -20,7 +20,7 @@ export const paymentColumns: IColumns[] = [
     },
     {
         label: 'Nombre Estudiante',
-        column: 'namePayer',
+        column: 'student.firstName',
         element: (data: IPayments) => `${data.student.firstName} ${data.student.lastName}`,
     },
     {

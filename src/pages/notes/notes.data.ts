@@ -4,7 +4,6 @@ import {  INotes } from "../../interfaces/inscription.interface";
 import { IColumns } from "../../interfaces/table.interface";
 
 export interface INotesForm {
-    id: number;
     activityId: number;
     studentId: number;
     note: number;
@@ -15,7 +14,6 @@ export interface INotesDownloadForm {
 }
 
 export const notesDefaultValues: INotesForm = {
-    id: 0,
     activityId: 0,
     studentId: 0,
     note: 0,
@@ -28,12 +26,12 @@ export const notesDownloadDefaultValues: INotesDownloadForm = {
 export const notesColumns: IColumns[] = [
     {
         label: 'Actividad',
-        column: 'activity',
+        column: 'Activities.activity',
         element: (data: INotes) => data.Activities.activity
     },
     {
         label: 'Estudiante',
-        column: 'name',
+        column: 'student.firstName',
         element: (data: INotes) => `${data.student.firstName} ${data.student.lastName} - ${data.student.identify}`
     },
     {

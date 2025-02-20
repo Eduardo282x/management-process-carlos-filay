@@ -29,7 +29,7 @@ export const Login = () => {
             if (response.success) {
                 localStorage.setItem('userData', JSON.stringify(returnApi.userData));
                 setTimeout(() => {
-                    navigate('/inicio')
+                    navigate('/inscripcion')
                 }, 1500);
             }
             setLoader(false);

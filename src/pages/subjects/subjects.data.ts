@@ -18,7 +18,7 @@ export const subjectsDefaultValues: ISubjectsForm = {
 export const subjectsColumns: IColumns[] = [
     {
         label: 'Salon',
-        column: 'grade',
+        column: 'Grades.grade',
         element: (data: ISubjects) => data.Grades.grade
     },
     {
