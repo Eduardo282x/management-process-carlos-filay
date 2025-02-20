@@ -1,6 +1,6 @@
 import { Dialog } from '@mui/material';
 import { useEffect, useState } from 'react'
-import { getDataApi } from '../../backend/basicAPI';
+import { getDataApi, getDataFileApi } from '../../backend/basicAPI';
 import { FormComponent } from '../../components/FormComponent';
 import TableComponent from '../../components/TableComponent';
 import { actionsValid } from '../../interfaces/table.interface';
@@ -38,16 +38,28 @@ export const Students = () => {
     }, [])
 
     const getActionTable = async (action: actionsValid, data: IStudentForm) => {
-        const responseBaseApi: BaseApiReturn = await BaseApi(action, data, defaultValues, '/students');
-        setDefaultValues(responseBaseApi.body as IStudentForm);
-        setAction(responseBaseApi.action)
-        if (responseBaseApi.open) { setOpenDialog(true) };
-        if (responseBaseApi.close) { setOpenDialog(false) };
-        if (responseBaseApi.snackbarMessage.message !== '') {
-            setSnackbar(responseBaseApi.snackbarMessage);
-            setOpenSnackbar(true);
-            getStudentsApi();
-        };
+        if (action === 'download') {
+            const response = await getDataFileApi(`/registration/constancia/${data.id}`);
+
+            const url = window.URL.createObjectURL(response);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = 'Constancia de estudio'; // Cambia el nombre del archivo según tus necesidades
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            const responseBaseApi: BaseApiReturn = await BaseApi(action, data, defaultValues, '/students');
+            setDefaultValues(responseBaseApi.body as IStudentForm);
+            setAction(responseBaseApi.action)
+            if (responseBaseApi.open) { setOpenDialog(true) };
+            if (responseBaseApi.close) { setOpenDialog(false) };
+            if (responseBaseApi.snackbarMessage.message !== '') {
+                setSnackbar(responseBaseApi.snackbarMessage);
+                setOpenSnackbar(true);
+                getStudentsApi();
+            };
+        }
     }
 
     return (
@@ -71,11 +83,11 @@ export const Students = () => {
                 aria-describedby="alert-dialog-description"
             >
                 <FormComponent
-                    title='Nuevo Estudiante'
+                    title={action === 'addApi' ? 'Nuevo Estudiante' : 'Editar Estudiante'}
                     dataForm={studentDataForm}
                     defaultValues={defaultValues}
                     validationSchema={studentValidationSchema}
-                    buttonText='Agregar Estudiante'
+                    buttonText={action === 'addApi' ? 'Agregar Estudiante' : 'Editar Estudiante'}
                     action={action}
                     func={getActionTable}
 

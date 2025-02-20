@@ -42,5 +42,12 @@ export const paymentColumns: IColumns[] = [
         label: 'Fecha',
         column: 'datePay',
         element: (data: IPayments) => formatDate(data.datePay),
+    },
+    {
+        label: 'Imprimir',
+        column: 'download',
+        icon: true,
+        element: () => 'download',
+        canFilter: false
     }
 ];

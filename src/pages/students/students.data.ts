@@ -44,6 +44,13 @@ export const studentColumns: IColumns[] = [
         icon: true,
         element: () => 'edit',
         canFilter: false
+    },
+    {
+        label: 'Constancia',
+        column: 'download',
+        icon: true,
+        element: () => 'download',
+        canFilter: false
     }
 ];
 
@@ -53,6 +60,7 @@ export interface IStudentForm {
     firstName: string;
     lastName: string;
     identify: string;
+    id?: number;
     age: number;
     status: boolean;
 }

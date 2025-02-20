@@ -16,6 +16,8 @@ import { MonthlyPay } from "./pages/monthlyPay/MonthlyPay";
 import { StudentPayments } from "./pages/studentPayments/StudentPayments";
 import { Subjects } from "./pages/subjects/Subjects";
 import { Activities } from "./pages/activities/Activities";
+import { Password } from "./pages/password/Password";
+import { Profile } from "./pages/profile/Profile";
 function App() {
 
   return (
@@ -23,6 +25,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Login />} />
+        <Route path='/recuperar' element={<Password />} />
 
         <Route element={<Layout />}>
           <Route path='/inicio' element={<Home />} />
@@ -39,6 +42,7 @@ function App() {
           <Route path='/metodos-de-pago' element={<MethodPayment />} />
           <Route path='/estudiantes' element={<Students />} />
           <Route path='/usuarios' element={<Users />} />
+          <Route path='/perfil' element={<Profile />} />
         </Route>
       </Routes>
 

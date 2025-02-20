@@ -1,20 +1,3 @@
-export interface IToken {
-    id: number;
-    firstName: number;
-    lastName: string;
-    email: string;
-    role: string;
-    specialty: string;
-    company: Company;
-    createdAt: Date;
-    updatedAt: Date;
-    iat: number;
-    exp: number;
-}
-
-export interface ITokenExp extends IToken {
-    expired: boolean;
-}
 export interface IUser {
     id: number;
     firstName: string;

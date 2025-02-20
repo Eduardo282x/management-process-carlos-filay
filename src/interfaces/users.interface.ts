@@ -13,5 +13,7 @@ export interface IUsers {
 
 export interface Rol {
     id: number;
-    rol: string;
+    rol: Roles;
 }
+
+export type Roles = 'Administrador' | 'Secretaria';

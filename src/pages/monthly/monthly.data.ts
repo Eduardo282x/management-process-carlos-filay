@@ -46,7 +46,7 @@ export const monthlyColumns: IColumns[] = [
         element: (data: IMonthly) => monthName(data.month),
     },
     {
-        label: 'Ano',
+        label: 'Año',
         column: 'year',
         element: (data: IMonthly) => data.year.toString(),
     },
@@ -130,7 +130,7 @@ export const monthlyDataForm: IDataForm[] = [
         ]
     },
     {
-        label: 'Ano',
+        label: 'Año',
         value: '',
         type: 'select',
         name: 'year',
