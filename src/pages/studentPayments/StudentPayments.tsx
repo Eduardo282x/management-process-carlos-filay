@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getDataApi } from '../../backend/basicAPI';
+import { getDataApi, getDataFileApi } from '../../backend/basicAPI';
 import TableComponent from '../../components/TableComponent';
 import { actionsValid } from '../../interfaces/table.interface';
 import Filter from '../../components/Filter';
@@ -24,8 +24,17 @@ export const StudentPayments = () => {
     }, [])
 
     const getActionTable = async (action: actionsValid, data: StudentPayment) => {
-        console.log(action);
-        console.log(data);
+        if (action === 'download') {
+            const response = await getDataFileApi(`/payments/download/monthly/student/${data.studentId}`);
+
+            const url = window.URL.createObjectURL(response);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = 'Solvencia de pago'; // Cambia el nombre del archivo según tus necesidades
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     }
 
     return (

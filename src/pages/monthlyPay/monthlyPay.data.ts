@@ -52,8 +52,7 @@ export const monthlyPayColumns: IColumns[] = [
         column: 'completePay',
         element: (data: IMonthlyPay) => data.completePay ? 'success' : 'error',
         icon: true
-    },
-
+    }
 ];
 
 export interface IPayMonthly {
@@ -168,3 +167,11 @@ export const paymentSchema = z.object({
         .string()
         .regex(/^(\d{10,11})$/, 'El teléfono debe tener entre 10 y 11 dígitos')
 });
+
+
+
+
+export interface IFilterPayMonthly {
+    grade: string;
+    status: string;
+}

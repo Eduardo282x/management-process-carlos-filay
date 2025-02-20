@@ -1,8 +1,8 @@
-import { Dialog } from '@mui/material';
-import { CirclePlus, Download } from 'lucide-react';
+import { Dialog, IconButton } from '@mui/material';
+import { CirclePlus, Download, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { BaseApiReturn, BaseApi } from '../../backend/BaseAPI';
-import { getDataApi } from '../../backend/basicAPI';
+import { getDataApi, postDataFileGetApi } from '../../backend/basicAPI';
 import { FormComponent } from '../../components/FormComponent';
 import { SnackbarComponent } from '../../components/SnackbarComponent';
 import TableComponent from '../../components/TableComponent';
@@ -10,13 +10,14 @@ import { BaseResponse, IOptions } from '../../interfaces/base.interface';
 import { actionsValid } from '../../interfaces/table.interface';
 import Filter from '../../components/Filter';
 import { Loader } from '../../components/loaders/Loader';
-import { defaultValuesPay, IMonthlyPay, IPayMonthly, monthlyPayColumns, paymentFormData, paymentSchema } from './monthlyPay.data';
+import { defaultValuesPay, IFilterPayMonthly, IMonthlyPay, IPayMonthly, monthlyPayColumns, paymentFormData, paymentSchema } from './monthlyPay.data';
 import { IMonthly, monthName } from '../monthly/monthly.data';
 import { IDataForm } from '../../interfaces/form.interface';
 import { IMethodPayment } from '../../interfaces/payment.interface';
 import { IStudents } from '../../interfaces/students.interface';
 import { formatNumberWithDots } from '../../utils/formaters';
 import { IGrades } from '../../interfaces/inscription.interface';
+import { useForm } from 'react-hook-form';
 
 export const MonthlyPay = () => {
     const [monthly, setMonthly] = useState<IMonthlyPay[]>([]);
@@ -30,6 +31,7 @@ export const MonthlyPay = () => {
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const [dataForm, setDataForm] = useState<IDataForm[]>(paymentFormData);
     const [grades, setGrades] = useState<IOptions[]>([]);
+    const [openDialogDownload, setOpenDialogDownload] = useState<boolean>(false);
 
     const getGradesApi = async () => {
         await getDataApi('/grades').then((response: IGrades[]) => {
@@ -44,6 +46,7 @@ export const MonthlyPay = () => {
     }
 
     const handleClose = () => setOpenDialog(false);
+    const handleCloseDownload = () => setOpenDialogDownload(false);
 
     const getMonthlyPayApi = async () => {
         setLoading(true);
@@ -120,7 +123,28 @@ export const MonthlyPay = () => {
         getGradesApi();
     }, [])
 
-    const getActionTable = async (action: actionsValid, data: IPayMonthly) => {
+    const getActionTable = async (action: actionsValid, data: IPayMonthly | IFilterPayMonthly | null) => {
+
+        if (action === 'addDialog') {
+            setOpenDialogDownload(true)
+            setAction('download')
+        }
+
+        if (action === 'download') {
+            const parseData: IFilterPayMonthly = data as IFilterPayMonthly
+            const response = await postDataFileGetApi(`/payments/download/pendingAmount`, parseData);
+
+            const url = window.URL.createObjectURL(response.data);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = 'Reporte de notas'; // Cambia el nombre del archivo según tus necesidades
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            reset();
+            setOpenDialogDownload(false);
+        }
+
         const responseBaseApi: BaseApiReturn = await BaseApi(action, data, defaultValues, '/payments/pendingAmount');
         setDefaultValues(responseBaseApi.body as IPayMonthly);
         setAction(responseBaseApi.action)
@@ -156,6 +180,18 @@ export const MonthlyPay = () => {
         }
     }
 
+    const { register, handleSubmit, reset } = useForm<IFilterPayMonthly>({
+        defaultValues: {
+            grade: '',
+            status: ''
+        },
+    });
+
+    const onSubmit = (values: IFilterPayMonthly) => {
+        getActionTable('download', values)
+    }
+
+
     return (
         <div className='w-full'>
             <p className='text-3xl font-semibold mb-5'>Pagos de Mensualidad</p>
@@ -185,7 +221,6 @@ export const MonthlyPay = () => {
                         <option value=''>Todos</option>
                         <option value='deben'>Deben</option>
                         <option value='solventes'>Solventes</option>
-
                     </select>
                 </div>
 
@@ -197,7 +232,7 @@ export const MonthlyPay = () => {
                     </button>
 
                     <button
-                        onClick={() => getActionTable('add', {} as IPayMonthly)}
+                        onClick={() => getActionTable('addDialog', null)}
                         className=' outline-none bg-green-500 hover:bg-green-700 transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
                         <Download />Imprimir
                     </button>
@@ -227,6 +262,62 @@ export const MonthlyPay = () => {
 
                 />
             </Dialog>
+
+            <Dialog
+                open={openDialogDownload}
+                onClose={handleCloseDownload}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <div className='p-8 w-[25rem] relative'>
+                    <div className="absolute top-4 right-4">
+                        <IconButton onClick={() => getActionTable('close', null)} >
+                            <X color='#ff0000' />
+                        </IconButton >
+                    </div>
+                    <h2>Pago de mensualidad</h2>
+
+                    <form onSubmit={handleSubmit(onSubmit)} className='mt-8 space-y-2' noValidate>
+
+                        <div className="flex flex-col gap-2 w-80 -mt-6">
+                            <label className='font-semibold'>Grados</label>
+                            <select
+                                {...register('grade')}
+                                onChange={(e) => filterStudentByGrade(e.target.value)}
+                                className={`w-full p-3 rounded-lg  border-gray-300 border focus:border-blue-500 selectOption`}  >
+                                <option selected hidden>Seleccionar</option>
+                                <option value=''>Todos</option>
+                                {grades && grades.map((opt: IOptions) => (
+                                    <option key={opt.value} value={opt.label}>{opt.label}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="flex flex-col gap-2 w-80 -mt-6">
+                            <label className='font-semibold'>Estado</label>
+                            <select
+                                {...register('status')}
+                                onChange={(e) => filterStudentByOwe(e.target.value)}
+                                className={`w-full p-3 rounded-lg  border-gray-300 border focus:border-blue-500 selectOption`}  >
+                                <option selected hidden>Seleccionar</option>
+                                <option value=''>Todos</option>
+                                <option value='deben'>Deben</option>
+                                <option value='solventes'>Solventes</option>
+                            </select>
+                        </div>
+
+                        <div className='pt-3'>
+                            <button
+                                type="submit"
+                                className=" outline-none bg-blue-600 hover:bg-blue-700 w-full p-2 text-white font-bold cursor-pointer transition-colors rounded-lg text-sm"
+                            >
+                                Descargar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </Dialog>
+
 
             <SnackbarComponent baseResponse={snackbar} open={openSnackbar} setOpen={setOpenSnackbar}></SnackbarComponent>
 

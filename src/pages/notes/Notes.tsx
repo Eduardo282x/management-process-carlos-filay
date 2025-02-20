@@ -114,6 +114,7 @@ export const Notes = () => {
             setOpenDialogDownload(true)
             setAction('download')
         }
+        
         if (action === 'download') {
             const response = await getDataFileApi(`/notes/students/report/${data.studentId}`);
 

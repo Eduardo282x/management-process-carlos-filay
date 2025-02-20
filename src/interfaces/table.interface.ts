@@ -18,4 +18,4 @@ export interface TableReturn {
     data: any;
 }
 
-export type actionsValid = 'edit' | 'add' | 'delete' | '' | 'close' | 'addApi' | 'editApi' | 'download';
+export type actionsValid = 'edit' | 'add' | 'delete' | '' | 'close' | 'addApi' | 'editApi' | 'addDialog' | 'download';

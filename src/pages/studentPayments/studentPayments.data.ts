@@ -51,7 +51,7 @@ export const monthlyPayColumns: IColumns[] = [
         element: (data: StudentPayment) => formatDate(data.datePay),
     },
     {
-        label: 'Constancia',
+        label: 'Solvencia',
         column: 'download',
         icon: true,
         element: () => 'download',

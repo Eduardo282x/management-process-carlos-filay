@@ -28,6 +28,14 @@ export const getParamsDataApi = (endpoint: string, params: any) => {
     })
 }
 
+export const postDataFileGetApi = async (endpoint: string, data: any) => {
+    return await axiosInstance.post(endpoint, data, {
+        responseType: 'blob'
+    })
+    .catch((err) => {
+        return err.response.data;
+    })
+}
 export const postDataApi = async (endpoint: string, data: any): Promise<BaseResponseLogin | BaseResponse> => {
     return await axiosInstance.post(endpoint, data).then((response) => {
         return response.data;
