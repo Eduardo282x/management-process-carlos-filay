@@ -142,6 +142,20 @@ export const MonthlyPay = () => {
         }
     }
 
+    const filterStudentByOwe = (grade: string) => {
+        if (grade === '') { setFilterMonthly(monthly) }
+
+        if (grade == 'deben') {
+            const monthlyFilter = monthly.filter(mon => mon.completePay === false);
+            setFilterMonthly(monthlyFilter)
+        }
+
+        if (grade == 'solventes') {
+            const monthlyFilter = monthly.filter(mon => mon.completePay === true);
+            setFilterMonthly(monthlyFilter)
+        }
+    }
+
     return (
         <div className='w-full'>
             <p className='text-3xl font-semibold mb-5'>Pagos de Mensualidad</p>
@@ -159,6 +173,19 @@ export const MonthlyPay = () => {
                         {grades && grades.map((opt: IOptions) => (
                             <option key={opt.value} value={opt.label}>{opt.label}</option>
                         ))}
+                    </select>
+                </div>
+
+                <div className="flex flex-col gap-2 w-80 -mt-6">
+                    <label className='font-semibold'>Estado</label>
+                    <select
+                        onChange={(e) => filterStudentByOwe(e.target.value)}
+                        className={`w-full p-3 rounded-lg  border-gray-300 border focus:border-blue-500 selectOption`}  >
+                        <option selected hidden>Seleccionar</option>
+                        <option value=''>Todos</option>
+                        <option value='deben'>Deben</option>
+                        <option value='solventes'>Solventes</option>
+
                     </select>
                 </div>
 

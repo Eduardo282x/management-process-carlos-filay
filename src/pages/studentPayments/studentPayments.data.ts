@@ -49,5 +49,12 @@ export const monthlyPayColumns: IColumns[] = [
         label: 'Fecha',
         column: 'datePay',
         element: (data: StudentPayment) => formatDate(data.datePay),
+    },
+    {
+        label: 'Constancia',
+        column: 'download',
+        icon: true,
+        element: () => 'download',
+        canFilter: false
     }
 ];

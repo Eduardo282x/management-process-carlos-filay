@@ -30,7 +30,7 @@ export const StudentPayments = () => {
 
     return (
         <div className='w-full'>
-            <p className=' text-3xl font-semibold mb-5'>Pagos de Mensualidad</p>
+            <p className=' text-3xl font-semibold mb-5'>Pagos de Estudiante</p>
 
             <div className="flex items-center justify-between w-full my-5">
                 <Filter tableData={monthly} setTableData={setDataTable} tableColumns={monthlyPayColumns}></Filter>
