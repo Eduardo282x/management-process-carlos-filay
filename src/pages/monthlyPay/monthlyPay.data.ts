@@ -48,7 +48,7 @@ export const monthlyPayColumns: IColumns[] = [
         element: (data: IMonthlyPay) => formatNumberWithDots(data.remaining, '', '$'),
     },
     {
-        label: 'Pendiente',
+        label: 'Pagado',
         column: 'completePay',
         element: (data: IMonthlyPay) => data.completePay ? 'success' : 'error',
         icon: true

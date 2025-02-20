@@ -23,8 +23,8 @@ export const userColumns: IColumns[] = [
     },
     {
         label: 'Rol',
-        column: 'rolDescription',
-        element: (data: IUsers) => data.rolDescription,
+        column: 'rol.rol',
+        element: (data: IUsers) => data.rol.rol,
     },
     {
         label: 'Estado',

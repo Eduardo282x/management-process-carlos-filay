@@ -18,12 +18,12 @@ export const activityCDefaultValues: IActivityForm = {
 export const activityColumns: IColumns[] = [
     {
         label: 'Salon',
-        column: 'grade',
+        column: 'subjects.Grades.grade',
         element: (data: IActivities) => data.subjects.Grades.grade
     },
     {
         label: 'Materia',
-        column: 'subject',
+        column: 'subjects.subject',
         element: (data: IActivities) => data.subjects.subject
     },
     {

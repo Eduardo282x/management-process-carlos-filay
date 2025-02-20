@@ -1,12 +1,12 @@
 import { Dialog } from '@mui/material';
-import { CirclePlus } from 'lucide-react';
+import { CirclePlus, Download } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { BaseApiReturn, BaseApi } from '../../backend/BaseAPI';
 import { getDataApi } from '../../backend/basicAPI';
 import { FormComponent } from '../../components/FormComponent';
 import { SnackbarComponent } from '../../components/SnackbarComponent';
 import TableComponent from '../../components/TableComponent';
-import { BaseResponse } from '../../interfaces/base.interface';
+import { BaseResponse, IOptions } from '../../interfaces/base.interface';
 import { actionsValid } from '../../interfaces/table.interface';
 import Filter from '../../components/Filter';
 import { Loader } from '../../components/loaders/Loader';
@@ -16,9 +16,11 @@ import { IDataForm } from '../../interfaces/form.interface';
 import { IMethodPayment } from '../../interfaces/payment.interface';
 import { IStudents } from '../../interfaces/students.interface';
 import { formatNumberWithDots } from '../../utils/formaters';
+import { IGrades } from '../../interfaces/inscription.interface';
 
 export const MonthlyPay = () => {
     const [monthly, setMonthly] = useState<IMonthlyPay[]>([]);
+    const [monthlyFilter, setFilterMonthly] = useState<IMonthlyPay[]>([]);
     const [dataTable, setDataTable] = useState<IMonthlyPay[]>([]);
     const [action, setAction] = useState<actionsValid>('add');
     const [loading, setLoading] = useState<boolean>(true);
@@ -27,6 +29,19 @@ export const MonthlyPay = () => {
     const [snackbar, setSnackbar] = useState<BaseResponse>({} as BaseResponse);
     const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
     const [dataForm, setDataForm] = useState<IDataForm[]>(paymentFormData);
+    const [grades, setGrades] = useState<IOptions[]>([]);
+
+    const getGradesApi = async () => {
+        await getDataApi('/grades').then((response: IGrades[]) => {
+            const gradesOptions: IOptions[] = response.map(gra => {
+                return {
+                    label: gra.grade,
+                    value: gra.id
+                }
+            })
+            setGrades(gradesOptions);
+        })
+    }
 
     const handleClose = () => setOpenDialog(false);
 
@@ -34,6 +49,7 @@ export const MonthlyPay = () => {
         setLoading(true);
         await getDataApi('/payments/pendingAmount').then((response: IMonthlyPay[]) => {
             setMonthly(response);
+            setFilterMonthly(response);
             setLoading(false)
         })
     }
@@ -84,7 +100,7 @@ export const MonthlyPay = () => {
                         return {
                             ...form,
                             options: response.map((student) => ({
-                                label: `${student.firstName} ${student.lastName} - ${formatNumberWithDots(student.identify,'V-','')}`,
+                                label: `${student.firstName} ${student.lastName} - ${formatNumberWithDots(student.identify, 'V-', '')}`,
                                 value: student.id,
                             })),
                         };
@@ -101,6 +117,7 @@ export const MonthlyPay = () => {
         getMonthlyApi();
         getMethodPaymentApi();
         getStudentsApi();
+        getGradesApi();
     }, [])
 
     const getActionTable = async (action: actionsValid, data: IPayMonthly) => {
@@ -116,23 +133,53 @@ export const MonthlyPay = () => {
         };
     }
 
+    const filterStudentByGrade = (grade: string) => {
+        if (grade === '') { setFilterMonthly(monthly) }
+
+        if (grade !== '') {
+            const monthlyFilter = monthly.filter(mon => mon.grade === grade);
+            setFilterMonthly(monthlyFilter)
+        }
+    }
+
     return (
         <div className='w-full'>
-            <p className=' text-3xl font-semibold mb-5'>Pagos de Mensualidad</p>
+            <p className='text-3xl font-semibold mb-5'>Pagos de Mensualidad</p>
 
             <div className="flex items-center justify-between w-full my-5">
-                <Filter tableData={monthly} setTableData={setDataTable} tableColumns={monthlyPayColumns}></Filter>
+                <Filter tableData={monthlyFilter} setTableData={setDataTable} tableColumns={monthlyPayColumns}></Filter>
 
-                <button
-                    onClick={() => getActionTable('add', {} as IPayMonthly)}
-                    className=' outline-none bg-[#2563eb] hover:bg-[#1e40af] transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
-                    <CirclePlus /> Agregar
-                </button>
+                <div className="flex flex-col gap-2 w-80 -mt-6">
+                    <label className='font-semibold'>Grados</label>
+                    <select
+                        onChange={(e) => filterStudentByGrade(e.target.value)}
+                        className={`w-full p-3 rounded-lg  border-gray-300 border focus:border-blue-500 selectOption`}  >
+                        <option selected hidden>Seleccionar</option>
+                        <option value=''>Todos</option>
+                        {grades && grades.map((opt: IOptions) => (
+                            <option key={opt.value} value={opt.label}>{opt.label}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => getActionTable('add', {} as IPayMonthly)}
+                        className=' outline-none bg-[#2563eb] hover:bg-[#1e40af] transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
+                        <CirclePlus /> Agregar
+                    </button>
+
+                    <button
+                        onClick={() => getActionTable('add', {} as IPayMonthly)}
+                        className=' outline-none bg-green-500 hover:bg-green-700 transition-all flex items-center justify-center gap-2 rounded-lg text-white px-4 py-2'>
+                        <Download />Imprimir
+                    </button>
+                </div>
             </div>
 
             {loading && <Loader></Loader>}
 
-            {!loading && monthly.length > 0 && (
+            {!loading && monthlyFilter.length > 0 && (
                 <TableComponent tableData={dataTable} tableColumns={monthlyPayColumns} action={getActionTable} />
             )}
 

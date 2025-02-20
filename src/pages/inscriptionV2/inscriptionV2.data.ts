@@ -10,12 +10,12 @@ export const registrationColumns: IColumns[] = [
     },
     {
         label: 'Cédula',
-        column: 'identifyPayer',
+        column: 'student.identify',
         element: (data: IRegistration) => formatNumberWithDots(data.student.identify,'V-',''),
     },
     {
         label: 'Grado',
-        column: 'grades',
+        column: 'Grades.grade',
         element: (data: IRegistration) => data.Grades.grade,
     },
     {
