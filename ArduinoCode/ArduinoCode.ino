@@ -14,10 +14,12 @@
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
 
+const int PIN_MQ2_ADC = 6;
+
 //------------LEDs-------
 #define ledProximityPin 9
 #define ledTempPin 18
-// #define ledGasPin 20
+#define ledGasPin 19
 
 //  ------------CONFIG API--------------------
 String baseURL = "https://c8q2gmjq-3000.use2.devtunnels.ms/api";
@@ -52,7 +54,7 @@ void setup() {
   pinMode(echoPin, INPUT);
   pinMode(ledProximityPin, OUTPUT);
   pinMode(ledTempPin, OUTPUT);
-  // pinMode(ledGasPin, OUTPUT);
+  pinMode(ledGasPin, OUTPUT);
 
 
   dht.begin();
@@ -70,6 +72,7 @@ void loop() {
   getAlertAPI();
   checkSendProximity();
   checkSendTemperature();
+  checkSendGas();
   delay(1000);  // Pausa para estabilizar lecturas
 }
 
@@ -84,6 +87,10 @@ float readProximity() {
   long duration = pulseIn(echoPin, HIGH);
   // Calcular la distancia en cm
   return duration * 0.034 / 2;
+}
+int readGas() {
+  int raw = analogRead(PIN_MQ2_ADC);
+  return raw;
 }
 
 void getAlertAPI() {
@@ -123,6 +130,14 @@ void checkSendProximity() {
   }
   delay(1000);
 }
+void checkSendGas() {
+  int gases = readGas();
+  if (!isnan(gases)) {
+    checkAlerts(3, gases);
+    sendReadingAPI(3, gases, "Pa");
+  }
+  delay(1000);
+}
 
 void checkSendTemperature() {
   float temperature = dht.readTemperature();
@@ -157,6 +172,9 @@ void checkAlerts(int sensorId, float value) {
         } else if (sensorId == 2) {
           digitalWrite(ledTempPin, HIGH);
           lastTempOn = millis();
+        } else if (sensorId == 3) {
+          digitalWrite(ledGasPin, HIGH);
+          lastTempOn = millis();
         }
       } else {
         if (sensorId == 1) {
@@ -166,6 +184,10 @@ void checkAlerts(int sensorId, float value) {
         } else if (sensorId == 2) {
           if (millis() - lastTempOn >= 1000) {
             digitalWrite(ledTempPin, LOW);
+          }
+        } else if (sensorId == 3) {
+          if (millis() - lastTempOn >= 1000) {
+            digitalWrite(ledGasPin, LOW);
           }
         }
       }
